@@ -144,8 +144,8 @@ int main(int argc, char** argv){
     }
     outputFile->cd();
 
-    TH1F* h1 = new TH1F("h1","uncorrected",100,600,1100);
-    TH1F* h2 = new TH1F("h2","corrected",100,600,1100);
+    TH1F* h1 = new TH1F("h1","uncorrected",100,1000,3100);
+    TH1F* h2 = new TH1F("h2","corrected",100,1000,3100);
 
     /**********************************
     **  start event loop
@@ -267,7 +267,8 @@ int main(int argc, char** argv){
         << " rechits." << std::endl;
         double coneSize = 0.3;
 
-        std::set<std::tuple<int, int, int, int, int>> saturatedList;
+        std::set<std::tuple<int, int, int, int, int>> saturatedList1;
+        std::set<std::tuple<int, int, int, int, int>> saturatedList2;
         float rechitsum = 0;
         float rechitsum_corr = 0;
 
@@ -300,8 +301,19 @@ int main(int argc, char** argv){
                     std::get<2>(saturatedCell) = waferV;
                     std::get<3>(saturatedCell) = cellU;
                     std::get<4>(saturatedCell) = cellV;
-                    saturatedList.insert(saturatedCell);
-                }else {
+                    saturatedList1.insert(saturatedCell);
+                }
+                else if(lenergy>41 && lenergy<42){
+                    // Format: (layer, waferU, waferV, cellU, cellV)
+                    std::tuple<int, int, int, int, int> saturatedCell;
+                    std::get<0>(saturatedCell) = layer;
+                    std::get<1>(saturatedCell) = waferU;
+                    std::get<2>(saturatedCell) = waferV;
+                    std::get<3>(saturatedCell) = cellU;
+                    std::get<4>(saturatedCell) = cellV;
+                    saturatedList1.insert(saturatedCell);
+                }
+                else {
                     rechitsum += lenergy;
                     rechitsum_corr += lenergy;
                 }
@@ -335,9 +347,13 @@ int main(int argc, char** argv){
                 std::get<2>(tempCell) = waferV;
                 std::get<3>(tempCell) = cellU;
                 std::get<4>(tempCell) = cellV;
-                std::set<std::tuple<int, int, int, int, int>>::iterator ibc = saturatedList.find(tempCell);
-                if(ibc != saturatedList.end()){
+                std::set<std::tuple<int, int, int, int, int>>::iterator ibc = saturatedList1.find(tempCell);
+                std::set<std::tuple<int, int, int, int, int>>::iterator ibc = saturatedList2.find(tempCell);
+                if(ibc != saturatedList1.end()){
                     rechitsum_corr += lenergy*122.34;
+                }
+                if(ibc != saturatedList2.end()){
+                    rechitsum_corr += lenergy*182.12;
                 }
             }
         }
