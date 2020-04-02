@@ -144,140 +144,6 @@ int main(int argc, char** argv){
     }
     outputFile->cd();
 
-    TH1F* h_rechitsum = new TH1F("h_rechitsum","Rechitsum silicon;E[GeV]",100,0,20.);
-    TH1F* h_rechitsumdead_Si = new TH1F("h_rechitsumdead_Si","Rechitsum dead silicon;E[GeV]",100,0,20.);
-    TH1F* h_rechitsumave = new TH1F("h_rechitsumave","Sum energy average method;E[GeV]",100,0,20.);
-
-    /**********************************
-    ** for missing channel study
-    **********************************/
-    // SILICON
-    std::set<std::tuple<unsigned, int, int, unsigned, unsigned>> deadlistsi;
-
-    // Kill cells and calculate statistics on adjacent dead cells
-    unsigned N_try_success = 0; // Number of killed cells
-    unsigned N_try_all = 0; // Number of trials to kill cells
-    /*
-    float N_cluster2 = 0; // Number of dead cells clusters (n_dead = 2)
-    float N_clusters = 0; // Number of dead cells clusters (n_dead > 2)
-    */
-
-    TRandom3 r(0);
-    for(unsigned lr = 1; lr <= 28; ++lr) {
-        for(int waferU = -12; waferU <= 12; ++waferU) {
-            for(int waferV = -12; waferV <= 12; ++waferV) {
-                for(unsigned cellU = 0; cellU <= 16; ++cellU) {
-                    for(unsigned cellV = 0; cellV <=16; ++cellV){
-                        //if((cellU > cellV+9) || (cellV > cellU+8)) {
-                            N_try_all++;
-                            if(r.Rndm() < deadfrac){
-                                N_try_success++;
-                                deadlistsi.insert(std::make_tuple(
-                                    lr,
-                                    waferU,
-                                    waferV,
-                                    cellU,
-                                    cellV
-                                ));
-                            }
-                        //}
-                    }
-                }
-            }
-        }
-    }
-
-    std::cout << "List of dead Si cells was created successfully. \n"
-    << "Killed " << N_try_success << " cells using " << N_try_all << " trials.\n"
-    << std::endl;
-
-    /* Old code
-    for(unsigned i(0);i<nsidead;i++) {
-        N_try_success++;
-        ld_si=lRndm.Integer(nsilayer);
-        range_si=simaxid[ld_si]-siminid[ld_si];
-        cd_si=siminid[ld_si]+(lRndm.Integer(range_si));
-        // Enforce that any dead cell has no more than one adjacent dead cell
-        unsigned adj_ok = 0;
-        //Need to switch this off for the moment
-        if (deadlistsi.find(std::make_pair(ld_si, cd_si)) != deadlistsi.end()) {
-            --i;
-            continue;
-        } //Insert end of comment here
-        if (adjacent) {
-            if (deadlistsi.find(std::make_pair(ld_si, cd_si-497)) != deadlistsi.end()) adj_ok++;
-            if (deadlistsi.find(std::make_pair(ld_si, cd_si-496)) != deadlistsi.end()) adj_ok++;
-            if (deadlistsi.find(std::make_pair(ld_si, cd_si-1)) != deadlistsi.end()) adj_ok++;
-            if (deadlistsi.find(std::make_pair(ld_si, cd_si+1)) != deadlistsi.end()) adj_ok++;
-            if (deadlistsi.find(std::make_pair(ld_si, cd_si+496)) != deadlistsi.end()) adj_ok++;
-            if (deadlistsi.find(std::make_pair(ld_si, cd_si+497)) != deadlistsi.end()) adj_ok++;
-            if (adj_ok > 1) {
-                --i;
-                N_cluster2++;
-                //std::cout << "N_try_success = " << N_try_success
-                << ": Found two or more adjascent dead cells for " << cd_si
-                << " at layer " << ld_si << ". Aborting cell killing..."
-                << std::endl;//Insert end of comment here
-                continue;
-            }
-            if (adj_ok < 2) {
-                deadlistsi.insert(std::make_pair(ld_si,cd_si));
-            }
-            if (adj_ok == 1) N_clusters++;
-        }
-        else {
-            deadlistsi.insert(std::make_pair(ld_si,cd_si));
-        }
-    }
-
-    // Print statistics on adjacent dead cells
-    if (adjacent) {
-        std::cout << std::string(120,'-') << std::endl
-        << std::string(49,'-') << " Dead cells statistics "
-        << std::string(48,'-') << std::endl
-        << std::string(120,'-') << std::endl
-        << "Number of dead cells clusters: " << N_clusters << std::endl
-        << "Fraction of dead cluster cells: "
-        << N_clusters*2./13983553. << std::endl
-        << "Fraction of dead cells having a dead neighbor: "
-        << N_clusters*2./nsidead << std::endl
-        << "Dead fraction: " << deadfrac << std::endl
-        << "Times the code tried to create clusters with more than 2 dead cells: "
-        << N_cluster2 << std::endl
-        << std::string(120,'-') << std::endl;
-    }
-    */
-
-    // Define average energy in layers plus and minus 1
-    std::set<std::tuple<unsigned, int, int, unsigned, unsigned>> adj_to_dead;
-    // Define average energy in layer in cells plus and minus 1
-    //std::vector<std::pair<unsigned, unsigned>> adj_to_dead_inlay;
-    for(auto itr=deadlistsi.begin();itr!=deadlistsi.end();itr++ ) {
-        adj_to_dead.insert({
-            std::get<0>(*itr)-1,
-            std::get<1>(*itr),
-            std::get<2>(*itr),
-            std::get<3>(*itr),
-            std::get<4>(*itr)
-        });
-        adj_to_dead.insert({
-            std::get<0>(*itr)+1,
-            std::get<1>(*itr),
-            std::get<2>(*itr),
-            std::get<3>(*itr),
-            std::get<4>(*itr)
-        });
-
-        /*
-        adj_to_dead_inlay.push_back({(*itr).first, (*itr).second-497});
-        adj_to_dead_inlay.push_back({(*itr).first, (*itr).second-496});
-        adj_to_dead_inlay.push_back({(*itr).first, (*itr).second-1});
-        adj_to_dead_inlay.push_back({(*itr).first, (*itr).second+1});
-        adj_to_dead_inlay.push_back({(*itr).first, (*itr).second+496});
-        adj_to_dead_inlay.push_back({(*itr).first, (*itr).second+497});
-        */
-    }
-
     /**********************************
     **  start event loop
     **********************************/
@@ -302,6 +168,18 @@ int main(int argc, char** argv){
     std::vector<int     > *rechitWaferV = 0;
     std::vector<unsigned> *rechitCellU  = 0;
     std::vector<unsigned> *rechitCellV  = 0;
+    std::vector<float   > *simhitEnergy = 0;
+    std::vector<float   > *simhitEta    = 0;
+    std::vector<float   > *simhitPhi    = 0;
+    std::vector<float   > *simhitPosx   = 0;
+    std::vector<float   > *simhitPosy   = 0;
+    std::vector<float   > *simhitPosz   = 0;
+    std::vector<unsigned> *simhitLayer  = 0;
+    std::vector<unsigned> *simhitIndex  = 0;
+    std::vector<int     > *simhitWaferU = 0;
+    std::vector<int     > *simhitWaferV = 0;
+    std::vector<unsigned> *simhitCellU  = 0;
+    std::vector<unsigned> *simhitCellV  = 0;
     std::vector<float   > *genEta       = 0;
     std::vector<float   > *genPhi       = 0;
 
@@ -317,6 +195,18 @@ int main(int argc, char** argv){
     lRecTree->SetBranchAddress("HGCRecHitWaferV" ,&rechitWaferV);
     lRecTree->SetBranchAddress("HGCRecHitCellU"  ,&rechitCellU);
     lRecTree->SetBranchAddress("HGCRecHitCellV"  ,&rechitCellV);
+    lRecTree->SetBranchAddress("HGCSimHitsEnergy",&simhitEnergy);
+    lRecTree->SetBranchAddress("HGCSimHitsEta"   ,&simhitEta);
+    lRecTree->SetBranchAddress("HGCSimHitsPhi"   ,&simhitPhi);
+    lRecTree->SetBranchAddress("HGCSimHitsPosx"  ,&simhitPosx);
+    lRecTree->SetBranchAddress("HGCSimHitsPosy"  ,&simhitPosy);
+    lRecTree->SetBranchAddress("HGCSimHitsPosz"  ,&simhitPosz);
+    lRecTree->SetBranchAddress("HGCSimHitsLayer" ,&simhitLayer);
+    lRecTree->SetBranchAddress("HGCSimHitsIndex" ,&simhitIndex);
+    lRecTree->SetBranchAddress("HGCSimHitsWaferU",&simhitWaferU);
+    lRecTree->SetBranchAddress("HGCSimHitsWaferV",&simhitWaferV);
+    lRecTree->SetBranchAddress("HGCSimHitsCellU" ,&simhitCellU);
+    lRecTree->SetBranchAddress("HGCSimHitsCellV" ,&simhitCellV);
     lRecTree->SetBranchAddress("GenParEta"       ,&genEta);
     lRecTree->SetBranchAddress("GenParPhi"       ,&genPhi);
 
@@ -344,6 +234,18 @@ int main(int argc, char** argv){
             lRecTree->SetBranchAddress("HGCRecHitWaferV" ,&rechitWaferV);
             lRecTree->SetBranchAddress("HGCRecHitCellU"  ,&rechitCellU);
             lRecTree->SetBranchAddress("HGCRecHitCellV"  ,&rechitCellV);
+            lRecTree->SetBranchAddress("HGCSimHitsEnergy",&simhitEnergy);
+            lRecTree->SetBranchAddress("HGCSimHitsEta"   ,&simhitEta);
+            lRecTree->SetBranchAddress("HGCSimHitsPhi"   ,&simhitPhi);
+            lRecTree->SetBranchAddress("HGCSimHitsPosx"  ,&simhitPosx);
+            lRecTree->SetBranchAddress("HGCSimHitsPosy"  ,&simhitPosy);
+            lRecTree->SetBranchAddress("HGCSimHitsPosz"  ,&simhitPosz);
+            lRecTree->SetBranchAddress("HGCSimHitsLayer" ,&simhitLayer);
+            lRecTree->SetBranchAddress("HGCSimHitsIndex" ,&simhitIndex);
+            lRecTree->SetBranchAddress("HGCSimHitsWaferU",&simhitWaferU);
+            lRecTree->SetBranchAddress("HGCSimHitsWaferV",&simhitWaferV);
+            lRecTree->SetBranchAddress("HGCSimHitsCellU" ,&simhitCellU);
+            lRecTree->SetBranchAddress("HGCSimHitsCellV" ,&simhitCellV);
             lRecTree->SetBranchAddress("GenParEta"       ,&genEta);
             lRecTree->SetBranchAddress("GenParPhi"       ,&genPhi);
         }
@@ -356,30 +258,20 @@ int main(int argc, char** argv){
         if((*genEta).size()>0) {
             etagen   = (*genEta)[0];
             phigen   = (*genPhi)[0];
-            //thetagen = 2*TMath::ATan(exp(-etagen));
         }
 
         if (debug) std::cout << " - Event contains " << (*rechitEnergy).size()
         << " rechits." << std::endl;
         double coneSize = 0.3;
-        double rechitsum = 0;
-        double rechitsumdead_Si = 0;
-        double rechitsumlaypn = 0;
 
         // Loop over hits of event
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
             unsigned layer   = (*rechitLayer)[iH];
-            //double   xh      = (*rechitPosx)[iH];
-            //double   yh      = (*rechitPosy)[iH];
             double   zh      = (*rechitPosz)[iH];
             double   lenergy = (*rechitEnergy)[iH];
             double   leta    = (*rechitEta)[iH];
             double   lphi    = (*rechitPhi)[iH];
             double   dR      = DeltaR(etagen,phigen,leta,lphi);
-            //double   rgen    = zh*tan(thetagen);
-            //double   xgen    = rgen*cos(phigen);
-            //double   ygen    = rgen*sin(phigen);
-            //double   dR1     = fabs(sqrt((xgen-xh)*(xgen-xh)+(ygen-yh)*(ygen-yh)));
 
             int waferU  = (*rechitWaferU)[iH];
             int waferV  = (*rechitWaferV)[iH];
@@ -393,43 +285,9 @@ int main(int argc, char** argv){
             **     - in positive endcap
             */
             if(!index && zh > 0 && dR < coneSize) {
-                rechitsum += lenergy;
-                std::tuple<unsigned, int, int, unsigned, unsigned> tempsi(layer,waferU,waferV,cellU,cellV);
-                std::set<std::tuple<unsigned, int, int, unsigned, unsigned>>::iterator ibc=deadlistsi.find(tempsi);
-
-                // Calculate energy without dead Si cells
-                if(ibc == deadlistsi.end()) {
-                    rechitsumdead_Si += lenergy;
-                }
-
-                for(auto itr=deadlistsi.begin();itr!=deadlistsi.end();itr++ ) {
-                    // Perform Simple average method
-                    bool simpleAverage1 = (
-                        layer  == std::get<0>(*itr)+1 &&
-                        waferU == std::get<1>(*itr)   &&
-                        waferV == std::get<2>(*itr)   &&
-                        cellU  == std::get<3>(*itr)   &&
-                        cellV  == std::get<4>(*itr)
-                    );
-                    bool simpleAverage2 = (
-                        layer  == std::get<0>(*itr)-1 &&
-                        waferU == std::get<1>(*itr)   &&
-                        waferV == std::get<2>(*itr)   &&
-                        cellU  == std::get<3>(*itr)   &&
-                        cellV  == std::get<4>(*itr)
-                    );
-                    if(simpleAverage1 || simpleAverage2){
-                        rechitsumlaypn += lenergy/2;
-                    }
-                }
+                if(lenergy)
             }
         }
-        // Fill histograms
-        double rechitsumave=rechitsumlaypn+rechitsumdead_Si;
-        h_rechitsumave->Fill(rechitsumave);
-        h_rechitsum->Fill(rechitsum);
-        h_rechitsumdead_Si->Fill(rechitsumdead_Si);
-
         ievtRec++;
     }
 

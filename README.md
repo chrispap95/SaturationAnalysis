@@ -1,4 +1,4 @@
-# ResolutionAnalyzer
+# SaturationAnalyzer
 Code that performs simpleBH analysis using CMSSW produced ntuples as input.
 
 ## Introduction
@@ -31,12 +31,12 @@ cd condorSubmissions
 cmsrel CMSSW_10_6_3_patch1
 cd CMSSW_10_6_3_patch1/src
 cmsenv
-git clone https://github.com/chrispap95/ResolutionAnalyzer.git
+git clone https://github.com/chrispap95/SaturationAnalyzer.git
 scram b
 ```
 Then, prepare your CMSSW to trasfer it to the nodes by issuing
 ```bash
-cd ResolutionAnalyzer
+cd SaturationAnalyzer
 sh prepareCondor.sh
 ```
 

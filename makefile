@@ -1,5 +1,5 @@
 # name of the library
-LIBNAME = ResolutionAnalyzer
+LIBNAME = SaturationAnalyzer
 
 #Necessary to use shell built-in commands
 SHELL=bash
@@ -49,7 +49,7 @@ SRCS=$(wildcard $(BASEDIR)/src/*.cc)
 EXES=$(wildcard $(BASEDIR)/test/*.cpp)
 OBJS=$(subst $(SRCDIR), $(OBJDIR),$(subst cc,$(OBJ_EXT),$(SRCS)))
 
-BINS=$(EXEDIR)/simpleBH
+BINS=$(EXEDIR)/simpleBH $(EXEDIR)/ratioAnalyzer
 
 .PHONY: all
 all: lib $(BINS)
@@ -59,6 +59,9 @@ docs: all
 
 #$(EXEDIR)/%:  $(TESTDIR)/%.cpp $(LIBDIR)/lib$(LIBNAME).so $(wildcard $(BASEDIR)/include/*.h*)
 #	$(CXX) -o $@ $(CXXFLAGS) $< $(LIBS) -L$(LIBDIR) -l$(LIBNAME)
+
+$(EXEDIR)/ratioAnalyzer:  $(TESTDIR)/ratioAnalyzer.cpp $(LIBDIR)/lib$(LIBNAME).so $(wildcard $(BASEDIR)/include/*.h*)
+	$(CXX) -o $@ $(CXXFLAGS) $< $(LIBS) -L$(LIBDIR) -l$(LIBNAME)
 
 $(EXEDIR)/simpleBH:  $(TESTDIR)/simpleBH.cpp $(LIBDIR)/lib$(LIBNAME).so $(wildcard $(BASEDIR)/include/*.h*)
 	$(CXX) -o $@ $(CXXFLAGS) $< $(LIBS) -L$(LIBDIR) -l$(LIBNAME)
