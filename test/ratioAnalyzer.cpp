@@ -347,12 +347,12 @@ int main(int argc, char** argv){
                 std::get<2>(tempCell) = waferV;
                 std::get<3>(tempCell) = cellU;
                 std::get<4>(tempCell) = cellV;
-                std::set<std::tuple<int, int, int, int, int>>::iterator ibc = saturatedList1.find(tempCell);
-                std::set<std::tuple<int, int, int, int, int>>::iterator ibc = saturatedList2.find(tempCell);
-                if(ibc != saturatedList1.end()){
+                std::set<std::tuple<int, int, int, int, int>>::iterator ibc1 = saturatedList1.find(tempCell);
+                std::set<std::tuple<int, int, int, int, int>>::iterator ibc2 = saturatedList2.find(tempCell);
+                if(ibc1 != saturatedList1.end()){
                     rechitsum_corr += lenergy*122.34;
                 }
-                if(ibc != saturatedList2.end()){
+                if(ibc2 != saturatedList2.end()){
                     rechitsum_corr += lenergy*182.12;
                 }
             }
