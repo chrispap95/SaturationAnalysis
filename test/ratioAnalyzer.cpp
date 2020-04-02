@@ -343,7 +343,7 @@ int main(int argc, char** argv){
         }
 
         h1->Fill(rechitsum);
-        h1->Fill(rechitsum_corr);
+        h2->Fill(rechitsum_corr);
         ievtRec++;
     }
 
