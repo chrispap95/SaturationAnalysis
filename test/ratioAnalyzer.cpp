@@ -144,6 +144,9 @@ int main(int argc, char** argv){
     }
     outputFile->cd();
 
+    TH1F* h1 = new TH1F("h1","uncorrected",100,800,1200);
+    TH1F* h2 = new TH1F("h2","corrected",100,800,1200);
+
     /**********************************
     **  start event loop
     **********************************/
@@ -264,7 +267,11 @@ int main(int argc, char** argv){
         << " rechits." << std::endl;
         double coneSize = 0.3;
 
-        // Loop over hits of event
+        std::set<std::tuple<int, int, int, int, int>> saturatedList;
+        float rechitsum = 0;
+        float rechitsum_corr = 0;
+
+        // Loop over rechits of event
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
             unsigned layer   = (*rechitLayer)[iH];
             double   zh      = (*rechitPosz)[iH];
@@ -285,9 +292,58 @@ int main(int argc, char** argv){
             **     - in positive endcap
             */
             if(!index && zh > 0 && dR < coneSize) {
-                if(lenergy)
+                if(lenergy>27 && lenergy<28){
+                    // Format: (layer, waferU, waferV, cellU, cellV)
+                    std::tuple<int, int, int, int, int> saturatedCell;
+                    std::get<0>(saturatedCell) = layer;
+                    std::get<1>(saturatedCell) = waferU;
+                    std::get<2>(saturatedCell) = waferV;
+                    std::get<3>(saturatedCell) = cellU;
+                    std::get<4>(saturatedCell) = cellV;
+                    saturatedList.insert(saturatedCell);
+                }else {
+                    rechitsum += lenergy;
+                    rechitsum_corr += lenergy;
+                }
             }
         }
+
+        // Loop over simhits of event
+        for (unsigned iH(0); iH<(*simhitEnergy).size(); ++iH){
+            unsigned layer   = (*simhitLayer)[iH];
+            double   zh      = (*simhitPosz)[iH];
+            double   lenergy = (*simhitEnergy)[iH];
+            double   leta    = (*simhitEta)[iH];
+            double   lphi    = (*simhitPhi)[iH];
+            double   dR      = DeltaR(etagen,phigen,leta,lphi);
+
+            int waferU  = (*simhitWaferU)[iH];
+            int waferV  = (*simhitWaferV)[iH];
+            unsigned cellU   = (*simhitCellU)[iH];
+            unsigned cellV   = (*simhitCellV)[iH];
+            unsigned index   = (*simhitIndex)[iH];
+
+            /* Select hits that are:
+            **     - in CE-E
+            **     - within DeltaR < 0.3 wrt gen particle
+            **     - in positive endcap
+            */
+            if(!index && zh > 0 && dR < coneSize) {
+                std::tuple<int, int, int, int, int> tempCell;
+                std::get<0>(tempCell) = layer;
+                std::get<1>(tempCell) = waferU;
+                std::get<2>(tempCell) = waferV;
+                std::get<3>(tempCell) = cellU;
+                std::get<4>(tempCell) = cellV;
+                std::set<std::tuple<int, int, int, int, int>>::iterator ibc = saturatedList.find(tempCell);
+                if(ibc != saturatedList.end()){
+                    rechitsum_corr += lenergy*122.34;
+                }
+            }
+        }
+
+        h1->Fill(rechitsum);
+        h1->Fill(rechitsum_corr);
         ievtRec++;
     }
 
