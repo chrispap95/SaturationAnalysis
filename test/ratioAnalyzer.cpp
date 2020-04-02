@@ -144,8 +144,8 @@ int main(int argc, char** argv){
     }
     outputFile->cd();
 
-    TH1F* h1 = new TH1F("h1","uncorrected",100,800,1200);
-    TH1F* h2 = new TH1F("h2","corrected",100,800,1200);
+    TH1F* h1 = new TH1F("h1","uncorrected",100,600,1100);
+    TH1F* h2 = new TH1F("h2","corrected",100,600,1100);
 
     /**********************************
     **  start event loop
