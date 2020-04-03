@@ -305,7 +305,7 @@ int main(int argc, char** argv){
                 }
                 else if(lenergy>28 && lenergy<41){
                     // Format: (layer, waferU, waferV, cellU, cellV)
-                    std::tuple<int, int, int, int, int, float> saturatedCell;
+                    std::tuple<int, int, int, int, int, float, float> saturatedCell;
                     std::get<0>(saturatedCell) = layer;
                     std::get<1>(saturatedCell) = waferU;
                     std::get<2>(saturatedCell) = waferV;
