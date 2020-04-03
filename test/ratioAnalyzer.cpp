@@ -311,7 +311,7 @@ int main(int argc, char** argv){
                     std::get<2>(saturatedCell) = waferV;
                     std::get<3>(saturatedCell) = cellU;
                     std::get<4>(saturatedCell) = cellV;
-                    saturatedList1.insert(saturatedCell);
+                    saturatedList2.insert(saturatedCell);
                 }
                 else {
                     rechitsum += lenergy;
