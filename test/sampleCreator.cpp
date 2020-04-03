@@ -482,7 +482,7 @@ int main(int argc, char** argv){
             **     - in positive endcap
             */
             if(!index && zh > 0 && dR < coneSize) {
-                if(lenergy>27 && lenergy<28){
+                if(lenergy>27.7 && lenergy<27.85){
                     // Format: (layer, waferU, waferV, cellU, cellV)
                     std::tuple<int, int, int, int, int, unsigned> saturatedCell;
                     std::get<0>(saturatedCell) = layer;
@@ -493,7 +493,7 @@ int main(int argc, char** argv){
                     std::get<5>(saturatedCell) = 0;
                     saturatedList.insert(saturatedCell);
                 }
-                else if(lenergy>41 && lenergy<42){
+                else if(lenergy>41.3 && lenergy<41.45){
                     // Format: (layer, waferU, waferV, cellU, cellV)
                     std::tuple<int, int, int, int, int, unsigned> saturatedCell;
                     std::get<0>(saturatedCell) = layer;
