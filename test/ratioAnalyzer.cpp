@@ -272,7 +272,7 @@ int main(int argc, char** argv){
 
         // Loop over rechits of event
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
-            unsigned layer   = (*rechitLayer)[iH];
+            int layer   = (*rechitLayer)[iH];
             double   zh      = (*rechitPosz)[iH];
             double   lenergy = (*rechitEnergy)[iH];
             double   leta    = (*rechitEta)[iH];
@@ -318,7 +318,7 @@ int main(int argc, char** argv){
 
         // Loop over simhits of event
         for (unsigned iH(0); iH<(*simhitEnergy).size(); ++iH){
-            unsigned layer   = (*simhitLayer)[iH];
+            int layer   = (*simhitLayer)[iH];
             double   zh      = (*simhitPosz)[iH];
             double   lenergy = (*simhitEnergy)[iH];
             double   leta    = (*simhitEta)[iH];
