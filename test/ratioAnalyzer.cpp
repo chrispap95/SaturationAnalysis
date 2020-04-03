@@ -343,7 +343,7 @@ int main(int argc, char** argv){
                         std::get<2>(*itr) == waferV && std::get<3>(*itr) == cellU  &&
                         std::get<4>(*itr) == cellV
                     ){
-                        h1->Fill(std::get<5>(*itr)/lenergy);
+                        h1->Fill(std::get<5>(*itr));
                         break;
                     }
                 }
@@ -353,7 +353,7 @@ int main(int argc, char** argv){
                         std::get<2>(*itr) == waferV && std::get<3>(*itr) == cellU  &&
                         std::get<4>(*itr) == cellV
                     ){
-                        h2->Fill(std::get<5>(*itr)/lenergy);
+                        h2->Fill(std::get<5>(*itr));
                         break;
                     }
                 }
