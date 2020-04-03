@@ -267,8 +267,8 @@ int main(int argc, char** argv){
         << " rechits." << std::endl;
         double coneSize = 0.3;
 
-        std::vector<std::tuple<int, int, int, int, int, float>> saturatedList1;
-        std::vector<std::tuple<int, int, int, int, int, float>> saturatedList2;
+        std::vector<std::tuple<int, int, int, int, int, float, float>> saturatedList1;
+        std::vector<std::tuple<int, int, int, int, int, float, float>> saturatedList2;
 
         // Loop over rechits of event
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
@@ -293,13 +293,14 @@ int main(int argc, char** argv){
             if(!index && zh > 0 && dR < coneSize) {
                 if(lenergy>20 && lenergy<27){
                     // Format: (layer, waferU, waferV, cellU, cellV)
-                    std::tuple<int, int, int, int, int, float> saturatedCell;
+                    std::tuple<int, int, int, int, int, float, float> saturatedCell;
                     std::get<0>(saturatedCell) = layer;
                     std::get<1>(saturatedCell) = waferU;
                     std::get<2>(saturatedCell) = waferV;
                     std::get<3>(saturatedCell) = cellU;
                     std::get<4>(saturatedCell) = cellV;
                     std::get<5>(saturatedCell) = lenergy;
+                    std::get<6>(saturatedCell) = 0;
                     saturatedList1.push_back(saturatedCell);
                 }
                 else if(lenergy>28 && lenergy<41){
@@ -311,6 +312,7 @@ int main(int argc, char** argv){
                     std::get<3>(saturatedCell) = cellU;
                     std::get<4>(saturatedCell) = cellV;
                     std::get<5>(saturatedCell) = lenergy;
+                    std::get<6>(saturatedCell) = 0;
                     saturatedList2.push_back(saturatedCell);
                 }
             }
@@ -343,8 +345,7 @@ int main(int argc, char** argv){
                         std::get<2>(*itr) == waferV && std::get<3>(*itr) == cellU  &&
                         std::get<4>(*itr) == cellV
                     ){
-                        h1->Fill(std::get<5>(*itr));
-                        break;
+                        std::get<6>(*itr) += lenergy;
                     }
                 }
                 for(auto itr = saturatedList2.begin(); itr != saturatedList2.end(); ++itr) {
@@ -353,11 +354,17 @@ int main(int argc, char** argv){
                         std::get<2>(*itr) == waferV && std::get<3>(*itr) == cellU  &&
                         std::get<4>(*itr) == cellV
                     ){
-                        h2->Fill(std::get<5>(*itr));
-                        break;
+                        std::get<6>(*itr) += lenergy;
                     }
                 }
             }
+        }
+
+        for(auto itr = saturatedList1.begin(); itr != saturatedList1.end(); ++itr) {
+            h1->Fill(std::get<6>(*itr));
+        }
+        for(auto itr = saturatedList2.begin(); itr != saturatedList2.end(); ++itr) {
+            h2->Fill(std::get<6>(*itr));
         }
         ievtRec++;
     }
