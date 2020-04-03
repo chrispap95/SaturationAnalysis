@@ -281,9 +281,9 @@ int main(int argc, char** argv){
 
             int waferU  = (*rechitWaferU)[iH];
             int waferV  = (*rechitWaferV)[iH];
-            unsigned cellU   = (*rechitCellU)[iH];
-            unsigned cellV   = (*rechitCellV)[iH];
-            unsigned index   = (*rechitIndex)[iH];
+            int cellU   = (*rechitCellU)[iH];
+            int cellV   = (*rechitCellV)[iH];
+            int index   = (*rechitIndex)[iH];
 
             /* Select hits that are:
             **     - in CE-E
@@ -327,9 +327,9 @@ int main(int argc, char** argv){
 
             int waferU  = (*simhitWaferU)[iH];
             int waferV  = (*simhitWaferV)[iH];
-            unsigned cellU   = (*simhitCellU)[iH];
-            unsigned cellV   = (*simhitCellV)[iH];
-            unsigned index   = (*simhitIndex)[iH];
+            int cellU   = (*simhitCellU)[iH];
+            int cellV   = (*simhitCellV)[iH];
+            int index   = (*simhitIndex)[iH];
 
             /* Select hits that are:
             **     - in CE-E
