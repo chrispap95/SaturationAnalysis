@@ -361,10 +361,10 @@ int main(int argc, char** argv){
         }
 
         for(auto itr = saturatedList1.begin(); itr != saturatedList1.end(); ++itr) {
-            h1->Fill(std::get<6>(*itr));
+            h1->Fill(std::get<5>(*itr)/std::get<6>(*itr));
         }
         for(auto itr = saturatedList2.begin(); itr != saturatedList2.end(); ++itr) {
-            h2->Fill(std::get<6>(*itr));
+            h2->Fill(std::get<5>(*itr)/std::get<6>(*itr));
         }
         ievtRec++;
     }
