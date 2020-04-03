@@ -300,7 +300,7 @@ int main(int argc, char** argv){
                     std::get<3>(saturatedCell) = cellU;
                     std::get<4>(saturatedCell) = cellV;
                     std::get<5>(saturatedCell) = lenergy;
-                    saturatedList1.insert(saturatedCell);
+                    saturatedList1.push_back(saturatedCell);
                 }
                 else if(lenergy>28 && lenergy<41){
                     // Format: (layer, waferU, waferV, cellU, cellV)
@@ -311,7 +311,7 @@ int main(int argc, char** argv){
                     std::get<3>(saturatedCell) = cellU;
                     std::get<4>(saturatedCell) = cellV;
                     std::get<5>(saturatedCell) = lenergy;
-                    saturatedList2.insert(saturatedCell);
+                    saturatedList2.push_back(saturatedCell);
                 }
             }
         }
