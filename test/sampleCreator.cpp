@@ -332,10 +332,6 @@ int main(int argc, char** argv){
     for(unsigned k(0); k < 30; ++k) buffer_vector[k] = -1;
     MLvectorev.push_back(buffer_vector);
 
-    std::cout << "List of saturated Si cells was created successfully. \n"
-    << "Killed " << N_try_success << " cells using " << N_try_all << " trials.\n"
-    << std::endl;
-
     /**********************************
     **  start event loop
     **********************************/
