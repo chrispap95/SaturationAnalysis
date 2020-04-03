@@ -144,8 +144,8 @@ int main(int argc, char** argv){
     }
     outputFile->cd();
 
-    TH1F* h1 = new TH1F("h1","sat1",200,0,200);
-    TH1F* h2 = new TH1F("h2","sat1",200,0,200);
+    TH1F* h1 = new TH1F("h1","sat1",200,0,1000);
+    TH1F* h2 = new TH1F("h2","sat1",200,0,1000);
 
     /**********************************
     **  start event loop
