@@ -525,8 +525,8 @@ int main(int argc, char** argv){
             */
             if(!index && zh > 0 && dR < coneSize) {
                 rechitsum += lenergy;
-                std::tuple<int, int, int, int, int> tempsi(layer,waferU,waferV,cellU,cellV);
-                std::set<std::tuple<int, int, int, int, int>>::iterator ibc=saturatedList.find(tempsi);
+                std::tuple<int, int, int, int, int, unsigned> tempsi(layer,waferU,waferV,cellU,cellV,0);
+                std::set<std::tuple<int, int, int, int, int, unsigned>>::iterator ibc=saturatedList.find(tempsi);
                 bool isSaturated = false;
 
                 // Calculate energy without saturated Si cells
