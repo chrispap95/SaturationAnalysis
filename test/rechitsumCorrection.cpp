@@ -144,8 +144,8 @@ int main(int argc, char** argv){
     }
     outputFile->cd();
 
-    TH1F* h1 = new TH1F("h1","sat1",200,0,200);
-    TH1F* h2 = new TH1F("h2","sat1",200,0,200);
+    TH1F* h1 = new TH1F("h1","uncorrected",250,600,1100);
+    TH1F* h2 = new TH1F("h2","corrected",250,600,1100);
 
     /**********************************
     **  start event loop
@@ -267,8 +267,10 @@ int main(int argc, char** argv){
         << " rechits." << std::endl;
         double coneSize = 0.3;
 
-        std::vector<std::tuple<int, int, int, int, int, float>> saturatedList1;
-        std::vector<std::tuple<int, int, int, int, int, float>> saturatedList2;
+        std::set<std::tuple<int, int, int, int, int>> saturatedList1;
+        std::set<std::tuple<int, int, int, int, int>> saturatedList2;
+        float rechitsum = 0;
+        float rechitsum_corr = 0;
 
         // Loop over rechits of event
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
@@ -291,27 +293,29 @@ int main(int argc, char** argv){
             **     - in positive endcap
             */
             if(!index && zh > 0 && dR < coneSize) {
-                if(lenergy>20 && lenergy<27){
+                if(lenergy>27.7 && lenergy<27.85){
                     // Format: (layer, waferU, waferV, cellU, cellV)
-                    std::tuple<int, int, int, int, int, float> saturatedCell;
+                    std::tuple<int, int, int, int, int> saturatedCell;
                     std::get<0>(saturatedCell) = layer;
                     std::get<1>(saturatedCell) = waferU;
                     std::get<2>(saturatedCell) = waferV;
                     std::get<3>(saturatedCell) = cellU;
                     std::get<4>(saturatedCell) = cellV;
-                    std::get<5>(saturatedCell) = lenergy;
                     saturatedList1.insert(saturatedCell);
                 }
-                else if(lenergy>28 && lenergy<41){
+                else if(lenergy>41.3 && lenergy<41.45){
                     // Format: (layer, waferU, waferV, cellU, cellV)
-                    std::tuple<int, int, int, int, int, float> saturatedCell;
+                    std::tuple<int, int, int, int, int> saturatedCell;
                     std::get<0>(saturatedCell) = layer;
                     std::get<1>(saturatedCell) = waferU;
                     std::get<2>(saturatedCell) = waferV;
                     std::get<3>(saturatedCell) = cellU;
                     std::get<4>(saturatedCell) = cellV;
-                    std::get<5>(saturatedCell) = lenergy;
                     saturatedList2.insert(saturatedCell);
+                }
+                else {
+                    rechitsum += lenergy;
+                    rechitsum_corr += lenergy;
                 }
             }
         }
@@ -337,28 +341,25 @@ int main(int argc, char** argv){
             **     - in positive endcap
             */
             if(!index && zh > 0 && dR < coneSize) {
-                for(auto itr = saturatedList1.begin(); itr != saturatedList1.end(); ++itr) {
-                    if(
-                        std::get<0>(*itr) == layer  && std::get<1>(*itr) == waferU &&
-                        std::get<2>(*itr) == waferV && std::get<3>(*itr) == cellU  &&
-                        std::get<4>(*itr) == cellV
-                    ){
-                        h1->Fill(std::get<5>(*itr)/lenergy);
-                        break;
-                    }
+                std::tuple<int, int, int, int, int> tempCell;
+                std::get<0>(tempCell) = layer;
+                std::get<1>(tempCell) = waferU;
+                std::get<2>(tempCell) = waferV;
+                std::get<3>(tempCell) = cellU;
+                std::get<4>(tempCell) = cellV;
+                std::set<std::tuple<int, int, int, int, int>>::iterator ibc1 = saturatedList1.find(tempCell);
+                std::set<std::tuple<int, int, int, int, int>>::iterator ibc2 = saturatedList2.find(tempCell);
+                if(ibc1 != saturatedList1.end()){
+                    rechitsum_corr += lenergy*122.34;
                 }
-                for(auto itr = saturatedList2.begin(); itr != saturatedList2.end(); ++itr) {
-                    if(
-                        std::get<0>(*itr) == layer  && std::get<1>(*itr) == waferU &&
-                        std::get<2>(*itr) == waferV && std::get<3>(*itr) == cellU  &&
-                        std::get<4>(*itr) == cellV
-                    ){
-                        h2->Fill(std::get<5>(*itr)/lenergy);
-                        break;
-                    }
+                if(ibc2 != saturatedList2.end()){
+                    rechitsum_corr += lenergy*182.12;
                 }
             }
         }
+
+        h1->Fill(rechitsum);
+        h2->Fill(rechitsum_corr);
         ievtRec++;
     }
 
