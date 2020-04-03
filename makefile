@@ -49,7 +49,7 @@ SRCS=$(wildcard $(BASEDIR)/src/*.cc)
 EXES=$(wildcard $(BASEDIR)/test/*.cpp)
 OBJS=$(subst $(SRCDIR), $(OBJDIR),$(subst cc,$(OBJ_EXT),$(SRCS)))
 
-BINS=$(EXEDIR)/simpleBH $(EXEDIR)/ratioAnalyzer
+BINS=$(EXEDIR)/sampleCreator $(EXEDIR)/ratioAnalyzer
 
 .PHONY: all
 all: lib $(BINS)
@@ -63,7 +63,7 @@ docs: all
 $(EXEDIR)/ratioAnalyzer:  $(TESTDIR)/ratioAnalyzer.cpp $(LIBDIR)/lib$(LIBNAME).so $(wildcard $(BASEDIR)/include/*.h*)
 	$(CXX) -o $@ $(CXXFLAGS) $< $(LIBS) -L$(LIBDIR) -l$(LIBNAME)
 
-$(EXEDIR)/simpleBH:  $(TESTDIR)/simpleBH.cpp $(LIBDIR)/lib$(LIBNAME).so $(wildcard $(BASEDIR)/include/*.h*)
+$(EXEDIR)/sampleCreator:  $(TESTDIR)/sampleCreator.cpp $(LIBDIR)/lib$(LIBNAME).so $(wildcard $(BASEDIR)/include/*.h*)
 	$(CXX) -o $@ $(CXXFLAGS) $< $(LIBS) -L$(LIBDIR) -l$(LIBNAME)
 
 $(OBJDIR)/%.$(OBJ_EXT):  $(SRCDIR)/%.cc $(BASEDIR)/include/%.h*
