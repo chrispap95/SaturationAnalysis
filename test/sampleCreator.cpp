@@ -59,30 +59,30 @@ double DeltaR(double eta1,double phi1,double eta2,double phi2){
 /* Function that gives a vector of tuples that describe the neighbors
 ** of the tuple that is given as the input.
 */
-std::vector<std::tuple<int, int, int, int, int>> getNeighbors(
-    std::tuple<int, int, int, int, int> saturatedCell)
+std::vector<std::tuple<int, int, int, int, int, unsigned>> getNeighbors(
+    std::tuple<int, int, int, int, int, unsigned> saturatedCell)
 {
-    std::vector<std::tuple<int, int, int, int, int>> neighbors;
+    std::vector<std::tuple<int, int, int, int, int, unsigned>> neighbors;
     // Find same-layer neighboring cells
     // cell ( 0,-1) wrt given
-    std::tuple<int, int, int, int, int> n1(saturatedCell);
+    std::tuple<int, int, int, int, int, unsigned> n1(saturatedCell);
     std::get<4>(n1) -= 1;
     // cell (-1,-1) wrt given
-    std::tuple<int, int, int, int, int> n2(saturatedCell);
+    std::tuple<int, int, int, int, int, unsigned> n2(saturatedCell);
     std::get<3>(n2) -= 1;
     std::get<4>(n2) -= 1;
     // cell (-1, 0) wrt given
-    std::tuple<int, int, int, int, int> n3(saturatedCell);
+    std::tuple<int, int, int, int, int, unsigned> n3(saturatedCell);
     std::get<3>(n3) -= 1;
     // cell ( 0,+1) wrt given
-    std::tuple<int, int, int, int, int> n4(saturatedCell);
+    std::tuple<int, int, int, int, int, unsigned> n4(saturatedCell);
     std::get<4>(n4) += 1;
     // cell (+1, 0) wrt given
-    std::tuple<int, int, int, int, int> n5(saturatedCell);
+    std::tuple<int, int, int, int, int, unsigned> n5(saturatedCell);
     std::get<3>(n5) += 1;
     std::get<4>(n5) += 1;
     // cell (+1,+1) wrt given
-    std::tuple<int, int, int, int, int> n6(saturatedCell);
+    std::tuple<int, int, int, int, int, unsigned> n6(saturatedCell);
     std::get<3>(n6) += 1;
 
     // Check boundary conditions and make transitions between wafers when on the edge
@@ -584,7 +584,7 @@ int main(int argc, char** argv){
                             (*itr)[3] == cellU  && (*itr)[4] == cellV
                         ){
                             (*itr)[15] = lenergy;
-                            if( ) (*itr)[15] = -100;
+                            if(isSaturated) (*itr)[15] = -100;
                         }
                     }
                 }
