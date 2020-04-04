@@ -192,7 +192,6 @@ int main(int argc, char** argv){
     ("nRuns",           po::value<unsigned>(&nRuns)->default_value(0))
     ("firstRun",        po::value<unsigned>(&firstRun)->default_value(1))
     ("debug,d",         po::value<unsigned>(&debug)->default_value(0))
-
     ;
     po::store(po::command_line_parser(argc, argv).options(config).allow_unregistered().run(), vm);
     po::store(po::parse_config_file<char>(cfg.c_str(), config), vm);
@@ -273,36 +272,38 @@ int main(int argc, char** argv){
     float MLun1, MLun2, MLun3, MLun4, MLun5, MLun6;
     float MLrechitsum;
     TTree* t1 = new TTree("t1","sample");
-    t1->Branch("MLlayer"    ,&MLlayer    ,"MLlayer/F"    );
-    t1->Branch("MLwaferU"   ,&MLwaferU   ,"MLwaferU/F"   );
-    t1->Branch("MLwaferV"   ,&MLwaferV   ,"MLwaferV/F"   );
-    t1->Branch("MLcellU"    ,&MLcellU    ,"MLcellU/F"    );
-    t1->Branch("MLcellV"    ,&MLcellV    ,"MLcellV/F"    );
-    t1->Branch("MLeta"      ,&MLeta      ,"MLeta/F"      );
-    t1->Branch("MLphi"      ,&MLphi      ,"MLphi/F"      );
-    t1->Branch("MLn1"       ,&MLn1       ,"MLn1/F"       );
-    t1->Branch("MLn2"       ,&MLn2       ,"MLn2/F"       );
-    t1->Branch("MLn3"       ,&MLn3       ,"MLn3/F"       );
-    t1->Branch("MLn4"       ,&MLn4       ,"MLn4/F"       );
-    t1->Branch("MLn5"       ,&MLn5       ,"MLn5/F"       );
-    t1->Branch("MLn6"       ,&MLn6       ,"MLn6/F"       );
-    t1->Branch("MLsaturated",&MLsaturated,"MLsaturated/F");
-    t1->Branch("MLnup"      ,&MLnup      ,"MLnup/F"      );
-    t1->Branch("MLndown"    ,&MLndown    ,"MLndown/F"    );
-    t1->Branch("MLun1"      ,&MLun1      ,"MLun1/F"      );
-    t1->Branch("MLun2"      ,&MLun2      ,"MLun2/F"      );
-    t1->Branch("MLun3"      ,&MLun3      ,"MLun3/F"      );
-    t1->Branch("MLun4"      ,&MLun4      ,"MLun4/F"      );
-    t1->Branch("MLun5"      ,&MLun5      ,"MLun5/F"      );
-    t1->Branch("MLun6"      ,&MLun6      ,"MLun6/F"      );
-    t1->Branch("MLdn1"      ,&MLdn1      ,"MLdn1/F"      );
-    t1->Branch("MLdn2"      ,&MLdn2      ,"MLdn2/F"      );
-    t1->Branch("MLdn3"      ,&MLdn3      ,"MLdn3/F"      );
-    t1->Branch("MLdn4"      ,&MLdn4      ,"MLdn4/F"      );
-    t1->Branch("MLdn5"      ,&MLdn5      ,"MLdn5/F"      );
-    t1->Branch("MLdn6"      ,&MLdn6      ,"MLdn6/F"      );
-    t1->Branch("MLevent"    ,&MLevent    ,"MLevent/F"    );
-    t1->Branch("MLrechitsum",&MLrechitsum,"MLrechitsum/F");
+    t1->Branch("MLlayer"     ,&MLlayer     ,"MLlayer/F"     );
+    t1->Branch("MLwaferU"    ,&MLwaferU    ,"MLwaferU/F"    );
+    t1->Branch("MLwaferV"    ,&MLwaferV    ,"MLwaferV/F"    );
+    t1->Branch("MLcellU"     ,&MLcellU     ,"MLcellU/F"     );
+    t1->Branch("MLcellV"     ,&MLcellV     ,"MLcellV/F"     );
+    t1->Branch("MLeta"       ,&MLeta       ,"MLeta/F"       );
+    t1->Branch("MLphi"       ,&MLphi       ,"MLphi/F"       );
+    t1->Branch("MLn1"        ,&MLn1        ,"MLn1/F"        );
+    t1->Branch("MLn2"        ,&MLn2        ,"MLn2/F"        );
+    t1->Branch("MLn3"        ,&MLn3        ,"MLn3/F"        );
+    t1->Branch("MLn4"        ,&MLn4        ,"MLn4/F"        );
+    t1->Branch("MLn5"        ,&MLn5        ,"MLn5/F"        );
+    t1->Branch("MLn6"        ,&MLn6        ,"MLn6/F"        );
+    t1->Branch("MLsaturated" ,&MLsaturated ,"MLsaturated/F" );
+    t1->Branch("MLnup"       ,&MLnup       ,"MLnup/F"       );
+    t1->Branch("MLndown"     ,&MLndown     ,"MLndown/F"     );
+    t1->Branch("MLun1"       ,&MLun1       ,"MLun1/F"       );
+    t1->Branch("MLun2"       ,&MLun2       ,"MLun2/F"       );
+    t1->Branch("MLun3"       ,&MLun3       ,"MLun3/F"       );
+    t1->Branch("MLun4"       ,&MLun4       ,"MLun4/F"       );
+    t1->Branch("MLun5"       ,&MLun5       ,"MLun5/F"       );
+    t1->Branch("MLun6"       ,&MLun6       ,"MLun6/F"       );
+    t1->Branch("MLdn1"       ,&MLdn1       ,"MLdn1/F"       );
+    t1->Branch("MLdn2"       ,&MLdn2       ,"MLdn2/F"       );
+    t1->Branch("MLdn3"       ,&MLdn3       ,"MLdn3/F"       );
+    t1->Branch("MLdn4"       ,&MLdn4       ,"MLdn4/F"       );
+    t1->Branch("MLdn5"       ,&MLdn5       ,"MLdn5/F"       );
+    t1->Branch("MLdn6"       ,&MLdn6       ,"MLdn6/F"       );
+    t1->Branch("MLevent"     ,&MLevent     ,"MLevent/F"     );
+    t1->Branch("MLrechitsum" ,&MLrechitsum ,"MLrechitsum/F" );
+    t1->Branch("MLsimHits"   ,&MLsimHits   ,"MLsimHits/F"   );
+    t1->Branch("cellType"    ,&cellType    ,"cellType/F"    );
 
     /*
     ** Define a vector of the array:
@@ -310,27 +311,26 @@ int main(int argc, char** argv){
     **      layer, waferU, waferV, cellU, cellV,
     **      eta, phi,
     **      MLn1, MLn2, MLn3, MLn4, MLn5, MLn6,
-    **      rechit,
+    **      recHit,
     **      MLup, MLdown,
     **      MLun1, MLun2, MLun3, MLun4, MLun5, MLun6,
     **      MLdn1, MLdn2, MLdn3, MLdn4, MLdn5, MLdn6,
     **      MLevent,
-    **      MLrechitsum
+    **      MLrechitsum,
+    **      MLsimHits,
+    **      cellType
     ** }
     */
-    std::vector<std::array<float, 30>> MLvectorev;
-    std::set<std::tuple<int, int, int, int, int, unsigned>> saturatedList;
+    std::vector<std::array<float, 32>> MLvectorev;
+
+    // Format:
+    // <layer, waferU, waferV, cellU, cellV, cellType>
+    // cellType is 0 for 300um and 1 for 200um
+    std::set<std::tuple<int, int, int, int, int, int>> saturatedList;
 
     // Define average energy in layers plus and minus 1
     std::set<std::tuple<int, int, int, int, int, int>> adj_to_saturated;
     std::set<std::tuple<int, int, int, int, int, int>> adj_to_saturated_inlay;
-
-    /* This extra vector makes sure the information is passed even if there are
-    ** no available saturated rechits.
-    */
-    std::array<float, 30> buffer_vector;
-    for(unsigned k(0); k < 30; ++k) buffer_vector[k] = -1;
-    MLvectorev.push_back(buffer_vector);
 
     /**********************************
     **  start event loop
@@ -402,9 +402,6 @@ int main(int argc, char** argv){
 
     // Loop over entries (events)
     for (unsigned ievt(0); ievt<nEvts; ++ievt){
-        for(auto itr = MLvectorev.begin(); itr != MLvectorev.end(); itr++) {
-            for(unsigned k(5); k < 30; ++k) (*itr)[k] = 0;
-        }
         if (ievtRec>=lRecTree->GetEntries()) continue;
         Long64_t local_entry = lRecTree->LoadTree(ievt);
 
@@ -453,9 +450,6 @@ int main(int argc, char** argv){
         if (debug) std::cout << " - Event contains " << (*rechitEnergy).size()
         << " rechits." << std::endl;
         double coneSize = 0.3;
-        double rechitsum = 0;
-        double rechitsumsaturated_Si = 0;
-        double rechitsumlaypn = 0;
 
         // First loop over rechits of event
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
@@ -479,8 +473,8 @@ int main(int argc, char** argv){
             */
             if(!index && zh > 0 && dR < coneSize) {
                 if(lenergy>27.7 && lenergy<27.85){
-                    // Format: (layer, waferU, waferV, cellU, cellV)
-                    std::tuple<int, int, int, int, int, unsigned> saturatedCell;
+                    // Format: (layer, waferU, waferV, cellU, cellV, cellType)
+                    std::tuple<int, int, int, int, int, int> saturatedCell;
                     std::get<0>(saturatedCell) = layer;
                     std::get<1>(saturatedCell) = waferU;
                     std::get<2>(saturatedCell) = waferV;
@@ -488,21 +482,85 @@ int main(int argc, char** argv){
                     std::get<4>(saturatedCell) = cellV;
                     std::get<5>(saturatedCell) = 0;
                     saturatedList.insert(saturatedCell);
+                    std::array<float, 32> tempArr = {
+                        layer, waferU, waferV, cellU, cellV, leta, lphi,
+                        0, 0, 0, 0, 0, 0, // n1, n2, n3, n4, n5, n6
+                        lenergy,
+                        0, 0,             // nup, ndown
+                        0, 0, 0, 0, 0, 0, // un1, un2, un3, un4, un5, un6
+                        0, 0, 0, 0, 0, 0, // dn1, dn2, dn3, dn4, dn5, dn6
+                        ievt,
+                        0, 0,             // recHitsum, simhits
+                        0                 // cellType
+                    };
+                    MLvectorev.push_back(tempArr);
                 }
                 else if(lenergy>41.3 && lenergy<41.45){
-                    // Format: (layer, waferU, waferV, cellU, cellV)
-                    std::tuple<int, int, int, int, int, unsigned> saturatedCell;
+                    // Format: (layer, waferU, waferV, cellU, cellV, cellType)
+                    std::tuple<int, int, int, int, int, int> saturatedCell;
                     std::get<0>(saturatedCell) = layer;
                     std::get<1>(saturatedCell) = waferU;
                     std::get<2>(saturatedCell) = waferV;
                     std::get<3>(saturatedCell) = cellU;
                     std::get<4>(saturatedCell) = cellV;
-                    std::get<5>(saturatedCell) = 0;
+                    std::get<5>(saturatedCell) = 1;
                     saturatedList.insert(saturatedCell);
+                    std::array<float, 32> tempArr = {
+                        layer, waferU, waferV, cellU, cellV, leta, lphi,
+                        0, 0, 0, 0, 0, 0, // n1, n2, n3, n4, n5, n6
+                        lenergy,
+                        0, 0,             // nup, ndown
+                        0, 0, 0, 0, 0, 0, // un1, un2, un3, un4, un5, un6
+                        0, 0, 0, 0, 0, 0, // dn1, dn2, dn3, dn4, dn5, dn6
+                        ievt,
+                        0, 0,             // recHitsum, simhits
+                        1                 // cellType
+                    };
+                    MLvectorev.push_back(tempArr);
                 }
             }
         }
 
+        // Insert loops for adj_to_saturated and adj_to_saturated_inlay population here
+        for (auto itr = saturatedList.begin(); itr != saturatedList.end(); ++itr) {
+            adj_to_saturated.insert(
+                {
+                    0, //corresponds to cell bellow
+                    std::get<0>(deadCell)-1,
+                    std::get<1>(deadCell),
+                    std::get<2>(deadCell),
+                    std::get<3>(deadCell),
+                    std::get<4>(deadCell)
+                }
+            );
+            adj_to_saturated.insert(
+                {
+                    1, //corresponds to cell above
+                    std::get<0>(deadCell)+1,
+                    std::get<1>(deadCell),
+                    std::get<2>(deadCell),
+                    std::get<3>(deadCell),
+                    std::get<4>(deadCell)
+                }
+            );
+
+            std::vector<std::tuple<int,int,int,int,int,int>> inLayerNeighbors;
+            inLayerNeighbors = getNeighbors(*itr);
+            for(auto itr2 = inLayerNeighbors.begin(); itr2!=inLayerNeighbors.end(); ++itr2){
+                adj_to_saturated_inlay.insert(
+                    {
+                        iN,
+                        std::get<0>(*itr2),
+                        std::get<1>(*itr2),
+                        std::get<2>(*itr2),
+                        std::get<3>(*itr2),
+                        std::get<4>(*itr2)
+                    }
+                );
+            }
+        }
+
+        MLrechitsum = 0;
         // Second loop over rechits of event
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
             int      layer   = (*rechitLayer)[iH];
@@ -524,32 +582,14 @@ int main(int argc, char** argv){
             **     - in positive endcap
             */
             if(!index && zh > 0 && dR < coneSize) {
-                rechitsum += lenergy;
-                std::tuple<int, int, int, int, int, unsigned> tempsi(layer,waferU,waferV,cellU,cellV,0);
-                std::set<std::tuple<int, int, int, int, int, unsigned>>::iterator ibc=saturatedList.find(tempsi);
-                bool isSaturated = false;
+                std::tuple<int, int, int, int, int, int> tempsi1(layer,waferU,waferV,cellU,cellV,0);
+                std::tuple<int, int, int, int, int, int> tempsi2(layer,waferU,waferV,cellU,cellV,1);
+                std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc1=saturatedList.find(tempsi1);
+                std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc2=saturatedList.find(tempsi2);
 
                 // Calculate energy without saturated Si cells
                 if(ibc == saturatedList.end()) {
-                    rechitsumsaturated_Si += lenergy;
                     MLrechitsum += lenergy;
-                }else {
-                    // Do stuff with saturated cells
-                    /* ML code
-                    ** Input saturated cells eta, phi and rechits
-                    */
-                    isSaturated = true;
-                    for(auto itr = MLvectorev.begin(); itr != MLvectorev.end(); itr++) {
-                        if( (*itr)[0] == layer &&
-                            (*itr)[1] == waferU && (*itr)[2] == waferV &&
-                            (*itr)[3] == cellU  && (*itr)[4] == cellV
-                        ){
-                            (*itr)[5] = leta;
-                            (*itr)[6] = lphi;
-                            (*itr)[13] = lenergy;
-                            (*itr)[28] = (float)ievt;
-                        }
-                    }
                 }
 
                 /* Perform Simple Average
@@ -565,26 +605,22 @@ int main(int argc, char** argv){
                 std::set<std::tuple<int, int, int, int, int, int>>::iterator itrD=adj_to_saturated.find(tempsiD);
 
                 if(itrU!=adj_to_saturated.end()) {
-                    rechitsumlaypn += lenergy/2;
                     for(auto itr = MLvectorev.begin(); itr != MLvectorev.end(); itr++) {
                         if( (*itr)[0] == layer-1 &&
                             (*itr)[1] == waferU && (*itr)[2] == waferV &&
                             (*itr)[3] == cellU  && (*itr)[4] == cellV
                         ){
                             (*itr)[14] = lenergy;
-                            if(isSaturated) (*itr)[14] = -100;
                         }
                     }
                 }
                 if(itrD!=adj_to_saturated.end()) {
-                    rechitsumlaypn += lenergy/2;
                     for(auto itr = MLvectorev.begin(); itr != MLvectorev.end(); itr++) {
                         if( (*itr)[0] == layer+1 &&
                             (*itr)[1] == waferU && (*itr)[2] == waferV &&
                             (*itr)[3] == cellU  && (*itr)[4] == cellV
                         ){
                             (*itr)[15] = lenergy;
-                            if(isSaturated) (*itr)[15] = -100;
                         }
                     }
                 }
@@ -613,7 +649,6 @@ int main(int argc, char** argv){
                                 (*itr)[3] == std::get<2>(saturatedCell) && (*itr)[4] == std::get<3>(saturatedCell)
                             ){
                                 (*itr)[n+7] = lenergy;
-                                if(isSaturated) (*itr)[n+7] = -100;
                             }
                         }
                     }
@@ -639,7 +674,6 @@ int main(int argc, char** argv){
                             (*itr)[3] == std::get<2>(saturatedCell) && (*itr)[4] == std::get<3>(saturatedCell)
                             ){
                                 (*itr)[n+16] = lenergy;
-                                if(isSaturated) (*itr)[n+16] = -100;
                             }
                         }
                     }
@@ -665,7 +699,6 @@ int main(int argc, char** argv){
                             (*itr)[3] == std::get<2>(saturatedCell) && (*itr)[4] == std::get<3>(saturatedCell)
                             ){
                                 (*itr)[n+22] = lenergy;
-                                if(isSaturated) (*itr)[n+22] = -100;
                             }
                         }
                     }
@@ -709,6 +742,8 @@ int main(int argc, char** argv){
                 MLdn6       = (*itr)[27];
                 MLevent     = (float)ievt;
                 MLrechitsum = rechitsumsaturated_Si;
+                MLsimHits   = (*itr)[26];
+                cellType    = (*itr)[27];
                 t1->Fill();
             }
         }
