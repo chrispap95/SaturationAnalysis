@@ -544,6 +544,7 @@ int main(int argc, char** argv){
 
             std::vector<std::tuple<int,int,int,int,int,int>> inLayerNeighbors;
             inLayerNeighbors = getNeighbors(*itr);
+            int iN = 0;
             for(auto itr2 = inLayerNeighbors.begin(); itr2!=inLayerNeighbors.end(); ++itr2){
                 adj_to_saturated_inlay.insert(
                     {
@@ -555,6 +556,7 @@ int main(int argc, char** argv){
                         std::get<4>(*itr2)
                     }
                 );
+                ++iN;
             }
         }
 
