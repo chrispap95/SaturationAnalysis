@@ -483,13 +483,14 @@ int main(int argc, char** argv){
                     std::get<5>(saturatedCell) = 0;
                     saturatedList.insert(saturatedCell);
                     std::array<float, 32> tempArr = {
-                        layer, waferU, waferV, cellU, cellV, leta, lphi,
+                        (float)layer, (float)waferU, (float)waferV,
+                        (float)cellU, (float)cellV, (float)leta, (float)lphi,
                         0, 0, 0, 0, 0, 0, // n1, n2, n3, n4, n5, n6
                         lenergy,
                         0, 0,             // nup, ndown
                         0, 0, 0, 0, 0, 0, // un1, un2, un3, un4, un5, un6
                         0, 0, 0, 0, 0, 0, // dn1, dn2, dn3, dn4, dn5, dn6
-                        ievt,
+                        (float)ievt,
                         0, 0,             // recHitsum, simhits
                         0                 // cellType
                     };
@@ -506,13 +507,14 @@ int main(int argc, char** argv){
                     std::get<5>(saturatedCell) = 1;
                     saturatedList.insert(saturatedCell);
                     std::array<float, 32> tempArr = {
-                        layer, waferU, waferV, cellU, cellV, leta, lphi,
+                        (float)layer, (float)waferU, (float)waferV,
+                        (float)cellU, (float)cellV, (float)leta, (float)lphi,
                         0, 0, 0, 0, 0, 0, // n1, n2, n3, n4, n5, n6
                         lenergy,
                         0, 0,             // nup, ndown
                         0, 0, 0, 0, 0, 0, // un1, un2, un3, un4, un5, un6
                         0, 0, 0, 0, 0, 0, // dn1, dn2, dn3, dn4, dn5, dn6
-                        ievt,
+                        (float)ievt,
                         0, 0,             // recHitsum, simhits
                         1                 // cellType
                     };
