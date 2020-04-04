@@ -1,4 +1,4 @@
-/****************************************************
+*itr/****************************************************
 **  Channelog:
 **      Moved to CMSSW output.
 **      Editor: Christos Papageorgakis
@@ -270,7 +270,7 @@ int main(int argc, char** argv){
     float MLn1, MLn2, MLn3, MLn4, MLn5, MLn6;
     float MLdn1, MLdn2, MLdn3, MLdn4, MLdn5, MLdn6;
     float MLun1, MLun2, MLun3, MLun4, MLun5, MLun6;
-    float MLrechitsum;
+    float MLrechitsum, MLsimHits, cellType;
     TTree* t1 = new TTree("t1","sample");
     t1->Branch("MLlayer"     ,&MLlayer     ,"MLlayer/F"     );
     t1->Branch("MLwaferU"    ,&MLwaferU    ,"MLwaferU/F"    );
@@ -526,21 +526,21 @@ int main(int argc, char** argv){
             adj_to_saturated.insert(
                 {
                     0, //corresponds to cell bellow
-                    std::get<0>(deadCell)-1,
-                    std::get<1>(deadCell),
-                    std::get<2>(deadCell),
-                    std::get<3>(deadCell),
-                    std::get<4>(deadCell)
+                    std::get<0>(*itr)-1,
+                    std::get<1>(*itr),
+                    std::get<2>(*itr),
+                    std::get<3>(*itr),
+                    std::get<4>(*itr)
                 }
             );
             adj_to_saturated.insert(
                 {
                     1, //corresponds to cell above
-                    std::get<0>(deadCell)+1,
-                    std::get<1>(deadCell),
-                    std::get<2>(deadCell),
-                    std::get<3>(deadCell),
-                    std::get<4>(deadCell)
+                    std::get<0>(*itr)+1,
+                    std::get<1>(*itr),
+                    std::get<2>(*itr),
+                    std::get<3>(*itr),
+                    std::get<4>(*itr)
                 }
             );
 
