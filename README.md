@@ -13,7 +13,7 @@ make
 ## Execute code
 To execute the code
 ```bash
-./bin/simpleBH -c scripts/simpleBH.cfg
+./bin/sampleCreator -c scripts/sampleCreator.cfg
 ```
 
 You can view the output
@@ -31,7 +31,7 @@ cd condorSubmissions
 cmsrel CMSSW_10_6_3_patch1
 cd CMSSW_10_6_3_patch1/src
 cmsenv
-git clone https://github.com/chrispap95/SaturationAnalyzer.git
+git clone https://github.com/chrispap95/SaturationAnalysis.git
 scram b
 ```
 Then, prepare your CMSSW to trasfer it to the nodes by issuing
