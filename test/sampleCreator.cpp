@@ -582,13 +582,14 @@ int main(int argc, char** argv){
             **     - in positive endcap
             */
             if(!index && zh > 0 && dR < coneSize) {
+                std::tuple<int, int, int, int, int> tempsi(layer,waferU,waferV,cellU,cellV);
                 std::tuple<int, int, int, int, int, int> tempsi1(layer,waferU,waferV,cellU,cellV,0);
                 std::tuple<int, int, int, int, int, int> tempsi2(layer,waferU,waferV,cellU,cellV,1);
                 std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc1=saturatedList.find(tempsi1);
                 std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc2=saturatedList.find(tempsi2);
 
                 // Calculate energy without saturated Si cells
-                if(ibc == saturatedList.end()) {
+                if(ibc1 == saturatedList.end() && ibc2 == saturatedList.end()) {
                     MLrechitsum += lenergy;
                 }
 
