@@ -582,7 +582,6 @@ int main(int argc, char** argv){
             **     - in positive endcap
             */
             if(!index && zh > 0 && dR < coneSize) {
-                std::tuple<int, int, int, int, int> tempsi(layer,waferU,waferV,cellU,cellV);
                 std::tuple<int, int, int, int, int, int> tempsi1(layer,waferU,waferV,cellU,cellV,0);
                 std::tuple<int, int, int, int, int, int> tempsi2(layer,waferU,waferV,cellU,cellV,1);
                 std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc1=saturatedList.find(tempsi1);
@@ -636,7 +635,7 @@ int main(int argc, char** argv){
                     std::set<std::tuple<int, int, int, int, int, int>>::iterator itrNn=adj_to_saturated_inlay.find(tempsiNn);
                     if(itrNn!=adj_to_saturated_inlay.end()) {
                         std::vector<std::tuple<int,int,int,int,int, unsigned>> sameLayerNeighbors;
-                        sameLayerNeighbors = getNeighbors(tempsi);
+                        sameLayerNeighbors = getNeighbors(tempsi1);
                         // Get neighbor number
                         int nn = (std::get<0>(*itrNn)+3)%6;
                         std::tuple<int, int, int, int> saturatedCell;
@@ -661,7 +660,7 @@ int main(int argc, char** argv){
                     std::set<std::tuple<int, int, int, int, int, int>>::iterator itrUNn=adj_to_saturated_inlay.find(tempsiUNn);
                     if(itrUNn!=adj_to_saturated_inlay.end()) {
                         std::vector<std::tuple<int,int,int,int,int, unsigned>> nextLayerNeighbors;
-                        nextLayerNeighbors = getNeighbors(tempsi);
+                        nextLayerNeighbors = getNeighbors(tempsi1);
                         // Get neighbor number
                         int nn = (std::get<0>(*itrUNn)+3)%6;
                         std::tuple<int, int, int, int> saturatedCell;
@@ -686,7 +685,7 @@ int main(int argc, char** argv){
                     std::set<std::tuple<int, int, int, int, int, int>>::iterator itrDNn=adj_to_saturated_inlay.find(tempsiDNn);
                     if(itrDNn!=adj_to_saturated_inlay.end()) {
                         std::vector<std::tuple<int,int,int,int,int, unsigned>> prevLayerNeighbors;
-                        prevLayerNeighbors = getNeighbors(tempsi);
+                        prevLayerNeighbors = getNeighbors(tempsi1);
                         // Get neighbor number
                         int nn = (std::get<0>(*itrDNn)+3)%6;
                         std::tuple<int, int, int, int> saturatedCell;
@@ -742,7 +741,7 @@ int main(int argc, char** argv){
                 MLdn5       = (*itr)[26];
                 MLdn6       = (*itr)[27];
                 MLevent     = (float)ievt;
-                MLrechitsum = rechitsumsaturated_Si;
+                //MLrechitsum = rechitsumsaturated_Si;
                 MLsimHits   = (*itr)[26];
                 cellType    = (*itr)[27];
                 t1->Fill();
