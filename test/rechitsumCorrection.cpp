@@ -63,8 +63,6 @@ int main(int argc, char** argv){
     unsigned nRuns;
     std::string recoFileName;
     unsigned debug;
-    double deadfrac;
-    bool adjacent;
     po::options_description preconfig("Configuration");
     preconfig.add_options()("cfg,c",po::value<std::string>(&cfg)->required());
     po::variables_map vm;
@@ -79,9 +77,6 @@ int main(int argc, char** argv){
     ("recoFileName,r",  po::value<std::string>(&recoFileName)->required())
     ("nRuns",           po::value<unsigned>(&nRuns)->default_value(0))
     ("debug,d",         po::value<unsigned>(&debug)->default_value(0))
-    ("deadfrac",        po::value<double>(&deadfrac)->default_value(0))
-    //Restrict number of adjacent dead cells
-    ("adjacent",        po::value<bool>(&adjacent)->default_value(0))
     ;
     po::store(po::command_line_parser(argc, argv).options(config).allow_unregistered().run(), vm);
     po::store(po::parse_config_file<char>(cfg.c_str(), config), vm);
