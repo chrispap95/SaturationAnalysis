@@ -634,7 +634,7 @@ int main(int argc, char** argv){
                     //Check if cell is an nth neighbor of some saturated cell
                     std::set<std::tuple<int, int, int, int, int, int>>::iterator itrNn=adj_to_saturated_inlay.find(tempsiNn);
                     if(itrNn!=adj_to_saturated_inlay.end()) {
-                        std::vector<std::tuple<int,int,int,int,int, unsigned>> sameLayerNeighbors;
+                        std::vector<std::tuple<int,int,int,int,int, int>> sameLayerNeighbors;
                         sameLayerNeighbors = getNeighbors(tempsi1);
                         // Get neighbor number
                         int nn = (std::get<0>(*itrNn)+3)%6;
@@ -659,7 +659,7 @@ int main(int argc, char** argv){
                     );
                     std::set<std::tuple<int, int, int, int, int, int>>::iterator itrUNn=adj_to_saturated_inlay.find(tempsiUNn);
                     if(itrUNn!=adj_to_saturated_inlay.end()) {
-                        std::vector<std::tuple<int,int,int,int,int, unsigned>> nextLayerNeighbors;
+                        std::vector<std::tuple<int,int,int,int,int, int>> nextLayerNeighbors;
                         nextLayerNeighbors = getNeighbors(tempsi1);
                         // Get neighbor number
                         int nn = (std::get<0>(*itrUNn)+3)%6;
@@ -684,7 +684,7 @@ int main(int argc, char** argv){
                     );
                     std::set<std::tuple<int, int, int, int, int, int>>::iterator itrDNn=adj_to_saturated_inlay.find(tempsiDNn);
                     if(itrDNn!=adj_to_saturated_inlay.end()) {
-                        std::vector<std::tuple<int,int,int,int,int, unsigned>> prevLayerNeighbors;
+                        std::vector<std::tuple<int,int,int,int,int, int>> prevLayerNeighbors;
                         prevLayerNeighbors = getNeighbors(tempsi1);
                         // Get neighbor number
                         int nn = (std::get<0>(*itrDNn)+3)%6;
