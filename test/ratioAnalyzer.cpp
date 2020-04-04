@@ -145,7 +145,7 @@ int main(int argc, char** argv){
     outputFile->cd();
 
     TH1F* h1 = new TH1F("h1","sat1",1000,122.1,122.4);
-    TH1F* h2 = new TH1F("h2","sat1",1000,182,182.5);
+    TH1F* h2 = new TH1F("h2","sat1",1000,182,182.3);
 
     /**********************************
     **  start event loop
@@ -361,7 +361,8 @@ int main(int argc, char** argv){
         }
 
         for(auto itr = saturatedList1.begin(); itr != saturatedList1.end(); ++itr) {
-            h1->Fill(std::get<5>(*itr)/std::get<6>(*itr));
+            if(std::get<5>(*itr)/std::get<6>(*itr)<150) h1->Fill(std::get<5>(*itr)/std::get<6>(*itr));
+            else h2->Fill(std::get<5>(*itr)/std::get<6>(*itr));
         }
         for(auto itr = saturatedList2.begin(); itr != saturatedList2.end(); ++itr) {
             h2->Fill(std::get<5>(*itr)/std::get<6>(*itr));
