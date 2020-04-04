@@ -706,6 +706,39 @@ int main(int argc, char** argv){
             }
         }
 
+        // Loop over simhits of event
+        for (unsigned iH(0); iH<(*simhitEnergy).size(); ++iH){
+            int   layer   = (*simhitLayer)[iH];
+            float zh      = (*simhitPosz)[iH];
+            float lenergy = (*simhitEnergy)[iH];
+            float leta    = (*simhitEta)[iH];
+            float lphi    = (*simhitPhi)[iH];
+            float dR      = DeltaR(etagen,phigen,leta,lphi);
+
+            int waferU = (*simhitWaferU)[iH];
+            int waferV = (*simhitWaferV)[iH];
+            int cellU  = (*simhitCellU)[iH];
+            int cellV  = (*simhitCellV)[iH];
+            int index  = (*simhitIndex)[iH];
+
+            /* Select hits that are:
+            **     - in CE-E
+            **     - within DeltaR < 0.3 wrt gen particle
+            **     - in positive endcap
+            */
+            if(!index && zh > 0 && dR < coneSize) {
+                for(auto itr = MLvectorev.begin(); itr != MLvectorev.end(); ++itr) {
+                    if(
+                        (*itr)[0] == layer  && (*itr)[1] == waferU &&
+                        (*itr)[2] == waferV && (*itr)[3] == cellU  &&
+                        (*itr)[4] == cellV
+                    ){
+                        (*itr)[30] += lenergy;
+                    }
+                }
+            }
+        }
+
         //Export the ML dataset values to the TTree
         for(auto itr = MLvectorev.begin(); itr != MLvectorev.end(); ++itr) {
             if ((*itr)[5] > 0 || (*itr)[0]==-1) {
@@ -742,8 +775,8 @@ int main(int argc, char** argv){
                 MLdn6       = (*itr)[27];
                 MLevent     = (float)ievt;
                 //MLrechitsum = rechitsumsaturated_Si;
-                MLsimHits   = (*itr)[26];
-                cellType    = (*itr)[27];
+                MLsimHits   = (*itr)[30];
+                cellType    = (*itr)[31];
                 t1->Fill();
             }
         }
