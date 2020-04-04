@@ -350,10 +350,10 @@ int main(int argc, char** argv){
                 std::set<std::tuple<int, int, int, int, int>>::iterator ibc1 = saturatedList1.find(tempCell);
                 std::set<std::tuple<int, int, int, int, int>>::iterator ibc2 = saturatedList2.find(tempCell);
                 if(ibc1 != saturatedList1.end()){
-                    rechitsum_corr += lenergy*122.34;
+                    rechitsum_corr += lenergy*122.251;
                 }
                 if(ibc2 != saturatedList2.end()){
-                    rechitsum_corr += lenergy*182.12;
+                    rechitsum_corr += lenergy*182.138;
                 }
             }
         }

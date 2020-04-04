@@ -302,24 +302,6 @@ int main(int argc, char** argv){
     t1->Branch("MLsimHits"   ,&MLsimHits   ,"MLsimHits/F"   );
     t1->Branch("cellType"    ,&cellType    ,"cellType/F"    );
 
-    /*
-    ** Define a vector of the array:
-    ** {saturated cell:
-    **      layer, waferU, waferV, cellU, cellV,
-    **      eta, phi,
-    **      MLn1, MLn2, MLn3, MLn4, MLn5, MLn6,
-    **      recHit,
-    **      MLup, MLdown,
-    **      MLun1, MLun2, MLun3, MLun4, MLun5, MLun6,
-    **      MLdn1, MLdn2, MLdn3, MLdn4, MLdn5, MLdn6,
-    **      MLevent,
-    **      MLrechitsum,
-    **      MLsimHits,
-    **      cellType
-    ** }
-    */
-    std::vector<std::array<float, 32>> MLvectorev;
-
     // Format:
     // <layer, waferU, waferV, cellU, cellV, cellType>
     // cellType is 0 for 300um and 1 for 200um
@@ -399,6 +381,24 @@ int main(int argc, char** argv){
 
     // Loop over entries (events)
     for (unsigned ievt(0); ievt<nEvts; ++ievt){
+        /*
+        ** Define a vector of the array:
+        ** {saturated cell:
+        **      layer, waferU, waferV, cellU, cellV,
+        **      eta, phi,
+        **      MLn1, MLn2, MLn3, MLn4, MLn5, MLn6,
+        **      recHit,
+        **      MLup, MLdown,
+        **      MLun1, MLun2, MLun3, MLun4, MLun5, MLun6,
+        **      MLdn1, MLdn2, MLdn3, MLdn4, MLdn5, MLdn6,
+        **      MLevent,
+        **      MLrechitsum,
+        **      MLsimHits,
+        **      cellType
+        ** }
+        */
+        std::vector<std::array<float, 32>> MLvectorev;
+
         if (ievtRec>=lRecTree->GetEntries()) continue;
         Long64_t local_entry = lRecTree->LoadTree(ievt);
 
