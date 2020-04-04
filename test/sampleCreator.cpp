@@ -59,30 +59,30 @@ double DeltaR(double eta1,double phi1,double eta2,double phi2){
 /* Function that gives a vector of tuples that describe the neighbors
 ** of the tuple that is given as the input.
 */
-std::vector<std::tuple<int, int, int, int, int, unsigned>> getNeighbors(
-    std::tuple<int, int, int, int, int, unsigned> saturatedCell)
+std::vector<std::tuple<int, int, int, int, int, int>> getNeighbors(
+    std::tuple<int, int, int, int, int, int> saturatedCell)
 {
-    std::vector<std::tuple<int, int, int, int, int, unsigned>> neighbors;
+    std::vector<std::tuple<int, int, int, int, int, int>> neighbors;
     // Find same-layer neighboring cells
     // cell ( 0,-1) wrt given
-    std::tuple<int, int, int, int, int, unsigned> n1(saturatedCell);
+    std::tuple<int, int, int, int, int, int> n1(saturatedCell);
     std::get<4>(n1) -= 1;
     // cell (-1,-1) wrt given
-    std::tuple<int, int, int, int, int, unsigned> n2(saturatedCell);
+    std::tuple<int, int, int, int, int, int> n2(saturatedCell);
     std::get<3>(n2) -= 1;
     std::get<4>(n2) -= 1;
     // cell (-1, 0) wrt given
-    std::tuple<int, int, int, int, int, unsigned> n3(saturatedCell);
+    std::tuple<int, int, int, int, int, int> n3(saturatedCell);
     std::get<3>(n3) -= 1;
     // cell ( 0,+1) wrt given
-    std::tuple<int, int, int, int, int, unsigned> n4(saturatedCell);
+    std::tuple<int, int, int, int, int, int> n4(saturatedCell);
     std::get<4>(n4) += 1;
     // cell (+1, 0) wrt given
-    std::tuple<int, int, int, int, int, unsigned> n5(saturatedCell);
+    std::tuple<int, int, int, int, int, int> n5(saturatedCell);
     std::get<3>(n5) += 1;
     std::get<4>(n5) += 1;
     // cell (+1,+1) wrt given
-    std::tuple<int, int, int, int, int, unsigned> n6(saturatedCell);
+    std::tuple<int, int, int, int, int, int> n6(saturatedCell);
     std::get<3>(n6) += 1;
 
     // Check boundary conditions and make transitions between wafers when on the edge
@@ -173,10 +173,7 @@ int main(int argc, char** argv){
     std::string digifilePath;
     unsigned nRuns,firstRun;
     std::string recoFileName;
-    std::string MLFilePath;
     unsigned debug;
-    double saturatedfrac;
-    bool adjacent, MLsample;
     po::options_description preconfig("Configuration");
     preconfig.add_options()("cfg,c",po::value<std::string>(&cfg)->required());
     po::variables_map vm;
@@ -454,11 +451,11 @@ int main(int argc, char** argv){
         // First loop over rechits of event
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
             int      layer   = (*rechitLayer)[iH];
-            double   zh      = (*rechitPosz)[iH];
-            double   lenergy = (*rechitEnergy)[iH];
-            double   leta    = (*rechitEta)[iH];
-            double   lphi    = (*rechitPhi)[iH];
-            double   dR      = DeltaR(etagen,phigen,leta,lphi);
+            float   zh      = (*rechitPosz)[iH];
+            float   lenergy = (*rechitEnergy)[iH];
+            float   leta    = (*rechitEta)[iH];
+            float   lphi    = (*rechitPhi)[iH];
+            float   dR      = DeltaR(etagen,phigen,leta,lphi);
 
             int waferU  = (*rechitWaferU)[iH];
             int waferV  = (*rechitWaferV)[iH];
@@ -495,8 +492,7 @@ int main(int argc, char** argv){
                         0                 // cellType
                     };
                     MLvectorev.push_back(tempArr);
-                }
-                else if(lenergy>41.3 && lenergy<41.45){
+                }else if(lenergy>41.3 && lenergy<41.45){
                     // Format: (layer, waferU, waferV, cellU, cellV, cellType)
                     std::tuple<int, int, int, int, int, int> saturatedCell;
                     std::get<0>(saturatedCell) = layer;
