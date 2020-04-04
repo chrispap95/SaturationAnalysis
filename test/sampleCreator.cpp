@@ -1,4 +1,4 @@
-*itr/****************************************************
+/****************************************************
 **  Channelog:
 **      Moved to CMSSW output.
 **      Editor: Christos Papageorgakis
