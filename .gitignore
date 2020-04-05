@@ -49,3 +49,8 @@ docker_stderror
 # Condor and Project related files
 *.jdl
 *.cfg
+*.pdf
+dataset/
+bin/
+lib/
+obj/
