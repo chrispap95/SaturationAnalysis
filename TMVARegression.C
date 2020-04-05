@@ -65,7 +65,7 @@ void TMVARegression( TString myMethodList = "" )
    // This loads the library
    TMVA::Tools::Instance();
 
-   TString uniqueid = "TMVAReg_saturated_E0to3000";
+   TString uniqueid = "TMVAReg_saturated_E0to3000_40nodes_3hls";
 
    // Default MVA methods to be trained + tested
    std::map<std::string,int> Use;
@@ -137,28 +137,28 @@ void TMVARegression( TString myMethodList = "" )
    note that you may also use variable expressions, such as: "3*var1/var2*abs(var3)"
    [all types of expressions that can also be parsed by TTree::Draw( "expression" )]
    */
-   dataloader->AddVariable( "layer", "layer", "units", 'F' );
-   dataloader->AddVariable( "n1", "neighbor 1", "units", 'F' );
-   dataloader->AddVariable( "n2", "neighbor 2", "units", 'F' );
-   dataloader->AddVariable( "n3", "neighbor 3", "units", 'F' );
-   dataloader->AddVariable( "n4", "neighbor 4", "units", 'F' );
-   dataloader->AddVariable( "n5", "neighbor 5", "units", 'F' );
-   dataloader->AddVariable( "n6", "neighbor 6", "units", 'F' );
-   dataloader->AddVariable( "nup", "neighbor up", "units", 'F' );
-   dataloader->AddVariable( "ndown", "neighbor down", "units", 'F' );
-   dataloader->AddVariable( "un1", "up 1", "units", 'F' );
-   dataloader->AddVariable( "un2", "up 2", "units", 'F' );
-   dataloader->AddVariable( "un3", "up 3", "units", 'F' );
-   dataloader->AddVariable( "un4", "up 4", "units", 'F' );
-   dataloader->AddVariable( "un5", "up 5", "units", 'F' );
-   dataloader->AddVariable( "un6", "up 6", "units", 'F' );
-   dataloader->AddVariable( "dn1", "down 1", "units", 'F' );
-   dataloader->AddVariable( "dn2", "down 2", "units", 'F' );
-   dataloader->AddVariable( "dn3", "down 3", "units", 'F' );
-   dataloader->AddVariable( "dn4", "down 4", "units", 'F' );
-   dataloader->AddVariable( "dn5", "down 5", "units", 'F' );
-   dataloader->AddVariable( "dn6", "down 6", "units", 'F' );
-   dataloader->AddVariable( "cellType", "cellType", "units", 'F' );
+   dataloader->AddVariable(    "layer",         "layer", "units", 'F' );
+   dataloader->AddVariable(       "n1",    "neighbor 1", "units", 'F' );
+   dataloader->AddVariable(       "n2",    "neighbor 2", "units", 'F' );
+   dataloader->AddVariable(       "n3",    "neighbor 3", "units", 'F' );
+   dataloader->AddVariable(       "n4",    "neighbor 4", "units", 'F' );
+   dataloader->AddVariable(       "n5",    "neighbor 5", "units", 'F' );
+   dataloader->AddVariable(       "n6",    "neighbor 6", "units", 'F' );
+   dataloader->AddVariable(      "nup",   "neighbor up", "units", 'F' );
+   dataloader->AddVariable(    "ndown", "neighbor down", "units", 'F' );
+   dataloader->AddVariable(      "un1",          "up 1", "units", 'F' );
+   dataloader->AddVariable(      "un2",          "up 2", "units", 'F' );
+   dataloader->AddVariable(      "un3",          "up 3", "units", 'F' );
+   dataloader->AddVariable(      "un4",          "up 4", "units", 'F' );
+   dataloader->AddVariable(      "un5",          "up 5", "units", 'F' );
+   dataloader->AddVariable(      "un6",          "up 6", "units", 'F' );
+   dataloader->AddVariable(      "dn1",        "down 1", "units", 'F' );
+   dataloader->AddVariable(      "dn2",        "down 2", "units", 'F' );
+   dataloader->AddVariable(      "dn3",        "down 3", "units", 'F' );
+   dataloader->AddVariable(      "dn4",        "down 4", "units", 'F' );
+   dataloader->AddVariable(      "dn5",        "down 5", "units", 'F' );
+   dataloader->AddVariable(      "dn6",        "down 6", "units", 'F' );
+   dataloader->AddVariable( "cellType",      "cellType", "units", 'F' );
 
    /*
    You can add so-called "Spectator variables", which are not used in the MVA training,
@@ -239,7 +239,7 @@ void TMVARegression( TString myMethodList = "" )
 
 
    if (Use["DNN_CPU"]) {
-      TString layoutString("Layout=SYMMRELU|24,Layout=SYMMRELU|22,Layout=SYMMRELU|22,"
+      TString layoutString("Layout=SYMMRELU|24,Layout=SYMMRELU|40,Layout=SYMMRELU|40,Layout=SYMMRELU|40,"
                            "LINEAR");
       TString training0("LearningRate=1e-3,Momentum=0.5,Repetitions=1,ConvergenceSteps=20,BatchSize=200,"
                         "TestRepetitions=10,WeightDecay=0.01,Regularization=NONE,DropConfig=0.2+0.2+0.2+0.,"
