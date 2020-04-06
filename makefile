@@ -49,7 +49,7 @@ SRCS=$(wildcard $(BASEDIR)/src/*.cc)
 EXES=$(wildcard $(BASEDIR)/test/*.cpp)
 OBJS=$(subst $(SRCDIR), $(OBJDIR),$(subst cc,$(OBJ_EXT),$(SRCS)))
 
-BINS=$(EXEDIR)/sampleCreator $(EXEDIR)/ratioAnalyzer
+BINS=$(EXEDIR)/sampleCreator $(EXEDIR)/ratioAnalyzer $(EXEDIR)/rechitsumCorrection
 
 .PHONY: all
 all: lib $(BINS)
@@ -64,6 +64,9 @@ $(EXEDIR)/ratioAnalyzer:  $(TESTDIR)/ratioAnalyzer.cpp $(LIBDIR)/lib$(LIBNAME).s
 	$(CXX) -o $@ $(CXXFLAGS) $< $(LIBS) -L$(LIBDIR) -l$(LIBNAME)
 
 $(EXEDIR)/sampleCreator:  $(TESTDIR)/sampleCreator.cpp $(LIBDIR)/lib$(LIBNAME).so $(wildcard $(BASEDIR)/include/*.h*)
+	$(CXX) -o $@ $(CXXFLAGS) $< $(LIBS) -L$(LIBDIR) -l$(LIBNAME)
+
+$(EXEDIR)/rechitsumCorrection:  $(TESTDIR)/rechitsumCorrection.cpp $(LIBDIR)/lib$(LIBNAME).so $(wildcard $(BASEDIR)/include/*.h*)
 	$(CXX) -o $@ $(CXXFLAGS) $< $(LIBS) -L$(LIBDIR) -l$(LIBNAME)
 
 $(OBJDIR)/%.$(OBJ_EXT):  $(SRCDIR)/%.cc $(BASEDIR)/include/%.h*
