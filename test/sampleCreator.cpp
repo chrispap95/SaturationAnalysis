@@ -349,7 +349,7 @@ int main(int argc, char** argv){
     std::vector<unsigned> *simhitCellV  = 0;
     std::vector<float   > *genEta       = 0;
     std::vector<float   > *genPhi       = 0;
-    UInt_t *event = 0;
+    UInt_t event = 0;
 
     lRecTree->SetBranchAddress(  "HGCRecHitEnergy", &rechitEnergy );
     lRecTree->SetBranchAddress(     "HGCRecHitEta",    &rechitEta );
@@ -799,7 +799,7 @@ int main(int argc, char** argv){
                 t1->Fill();
             }
         }
-        std::cout << *event << std::endl;
+        std::cout << event << std::endl;
         ievtRec++;
     }
 
