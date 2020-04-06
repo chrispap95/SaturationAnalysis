@@ -792,7 +792,7 @@ int main(int argc, char** argv){
                 MLdn4       = (*itr)[25];
                 MLdn5       = (*itr)[26];
                 MLdn6       = (*itr)[27];
-                MLevent     = event->at(0);
+                MLevent     = *event;
                 //MLrechitsum = rechitsumsaturated_Si;
                 MLsimHits   = (*itr)[30];
                 cellType    = (*itr)[31];
