@@ -465,7 +465,7 @@ int main(int argc, char** argv){
             0, 0,             // recHitsum, simhits
             0                 // cellType
         };
-        MLvectorev.push_back(tempArr);
+        MLvectorev.push_back(bufferArr);
 
         // First loop over rechits of event
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
