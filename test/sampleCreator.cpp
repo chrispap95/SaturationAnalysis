@@ -349,7 +349,7 @@ int main(int argc, char** argv){
     std::vector<unsigned> *simhitCellV  = 0;
     std::vector<float   > *genEta       = 0;
     std::vector<float   > *genPhi       = 0;
-    int *event = 0;
+    UInt_t *event = 0;
 
     lRecTree->SetBranchAddress(  "HGCRecHitEnergy", &rechitEnergy );
     lRecTree->SetBranchAddress(     "HGCRecHitEta",    &rechitEta );
@@ -792,7 +792,7 @@ int main(int argc, char** argv){
                 MLdn4       = (*itr)[25];
                 MLdn5       = (*itr)[26];
                 MLdn6       = (*itr)[27];
-                MLevent     = *event;
+                MLevent     = (int)*event;
                 //MLrechitsum = rechitsumsaturated_Si;
                 MLsimHits   = (*itr)[30];
                 cellType    = (*itr)[31];
