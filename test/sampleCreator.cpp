@@ -468,8 +468,6 @@ int main(int argc, char** argv){
         MLvectorev.push_back(bufferArr);
 
         // First loop over rechits of event
-        MLrechitsum = 0;
-        bool hasSaturated = 0;
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
             int     layer   = (*rechitLayer)[iH];
             float   zh      = (*rechitPosz)[iH];
@@ -513,7 +511,6 @@ int main(int argc, char** argv){
                         0                 // cellType
                     };
                     MLvectorev.push_back(tempArr);
-                    hasSaturated = 1;
                 }else if(lenergy>41.3 && lenergy<41.45){
                     // Format: (layer, waferU, waferV, cellU, cellV, cellType)
                     std::tuple<int, int, int, int, int, int> saturatedCell;
@@ -537,9 +534,6 @@ int main(int argc, char** argv){
                         1                 // cellType
                     };
                     MLvectorev.push_back(tempArr);
-                    hasSaturated = 1;
-                }else {
-                    MLrechitsum += lenergy;
                 }
             }
         }
@@ -585,8 +579,9 @@ int main(int argc, char** argv){
             }
         }
 
+        MLrechitsum = 0;
         // Second loop over rechits of event
-        for (unsigned iH(0); iH<(*rechitEnergy).size() || hasSaturated; ++iH){
+        for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
             int      layer   = (*rechitLayer)[iH];
             double   zh      = (*rechitPosz)[iH];
             double   lenergy = (*rechitEnergy)[iH];
@@ -610,6 +605,11 @@ int main(int argc, char** argv){
                 std::tuple<int, int, int, int, int, int> tempsi2(layer,waferU,waferV,cellU,cellV,1);
                 std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc1=saturatedList.find(tempsi1);
                 std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc2=saturatedList.find(tempsi2);
+
+                // Calculate energy without saturated Si cells
+                if(ibc1 == saturatedList.end() && ibc2 == saturatedList.end()) {
+                    MLrechitsum += lenergy;
+                }
 
                 /* Perform Simple Average
                 ** First, check if the cell is in a neighbors list
@@ -726,7 +726,7 @@ int main(int argc, char** argv){
         }
 
         // Loop over simhits of event
-        for (unsigned iH(0); iH<(*simhitEnergy).size() || hasSaturated; ++iH){
+        for (unsigned iH(0); iH<(*simhitEnergy).size(); ++iH){
             int   layer   = (*simhitLayer)[iH];
             float zh      = (*simhitPosz)[iH];
             float lenergy = (*simhitEnergy)[iH];
