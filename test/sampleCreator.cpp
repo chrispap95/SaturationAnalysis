@@ -344,7 +344,6 @@ int main(int argc, char** argv){
     std::vector<unsigned> *simhitCellV  = 0;
     std::vector<float   > *genEta       = 0;
     std::vector<float   > *genPhi       = 0;
-    std::vector<float   > *genEnergy    = 0;
     UInt_t event = 0;
 
     lRecTree->SetBranchAddress(  "HGCRecHitEnergy", &rechitEnergy );
@@ -373,7 +372,6 @@ int main(int argc, char** argv){
     lRecTree->SetBranchAddress(  "HGCSimHitsCellV",  &simhitCellV );
     lRecTree->SetBranchAddress(        "GenParEta",       &genEta );
     lRecTree->SetBranchAddress(        "GenParPhi",       &genPhi );
-    lRecTree->SetBranchAddress(          "GenParE",    &genEnergy );
     lRecTree->SetBranchAddress(            "event",        &event );
 
     unsigned ievtRec = 0;
@@ -441,7 +439,6 @@ int main(int argc, char** argv){
             lRecTree->SetBranchAddress(  "HGCSimHitsCellV",  &simhitCellV );
             lRecTree->SetBranchAddress(        "GenParEta",       &genEta );
             lRecTree->SetBranchAddress(        "GenParPhi",       &genPhi );
-            lRecTree->SetBranchAddress(          "GenParE",    &genEnergy );
             lRecTree->SetBranchAddress(            "event",        &event );
         }
 
