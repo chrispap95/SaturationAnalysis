@@ -311,6 +311,8 @@ int main(int argc, char** argv){
     std::set<std::tuple<int, int, int, int, int, int>> adj_to_saturated;
     std::set<std::tuple<int, int, int, int, int, int>> adj_to_saturated_inlay;
 
+    TH1F* h1 = new TH1F("h1","rechitsum",300,0,3000);
+
     /**********************************
     **  start event loop
     **********************************/
@@ -450,6 +452,7 @@ int main(int argc, char** argv){
         if (debug) std::cout << " - Event contains " << (*rechitEnergy).size()
         << " rechits." << std::endl;
         double coneSize = 0.3;
+        float rechitsum = 0;
 
         // Buffer array that passes rechitsum to the output even when
         // no saturated cells are found
@@ -463,7 +466,7 @@ int main(int argc, char** argv){
             0, 0, 0, 0, 0, 0, // dn1, dn2, dn3, dn4, dn5, dn6
             (float)ievt,
             0, 0,             // recHitsum, simhits
-            0                 // cellType
+            -1                 // cellType
         };
         MLvectorev.push_back(bufferArr);
 
@@ -607,6 +610,7 @@ int main(int argc, char** argv){
                 std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc2=saturatedList.find(tempsi2);
 
                 // Calculate energy without saturated Si cells
+                rechitsum += lenergy;
                 if(ibc1 == saturatedList.end() && ibc2 == saturatedList.end()) {
                     MLrechitsum += lenergy;
                 }
@@ -724,6 +728,7 @@ int main(int argc, char** argv){
                 }
             }
         }
+        h1->Fill(rechitsum);
 
         // Loop over simhits of event
         for (unsigned iH(0); iH<(*simhitEnergy).size(); ++iH){

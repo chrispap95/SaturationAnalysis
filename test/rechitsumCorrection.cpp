@@ -288,6 +288,7 @@ int main(int argc, char** argv){
             **     - in positive endcap
             */
             if(!index && zh > 0 && dR < coneSize) {
+                rechitsum += lenergy;
                 if(lenergy>27.7 && lenergy<27.85){
                     // Format: (layer, waferU, waferV, cellU, cellV)
                     std::tuple<int, int, int, int, int> saturatedCell;
@@ -310,7 +311,6 @@ int main(int argc, char** argv){
                 }
                 else {
                     rechitsum_corr += lenergy;
-                    rechitsum += lenergy;
                 }
             }
         }
