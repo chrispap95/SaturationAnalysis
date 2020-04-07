@@ -496,6 +496,7 @@ int main(int argc, char** argv){
             **     - in positive endcap
             */
             if(!index && zh > 0 && dR < coneSize) {
+                rechitsum += lenergy;
                 if(lenergy>27.7 && lenergy<27.85){
                     // Format: (layer, waferU, waferV, cellU, cellV, cellType)
                     std::tuple<int, int, int, int, int, int> saturatedCell;
@@ -544,6 +545,8 @@ int main(int argc, char** argv){
                     };
                     MLvectorev.push_back(tempArr);
                     isSaturated = 1;
+                }else{
+                    MLrechitsum += lenergy;
                 }
             }
         }
@@ -592,6 +595,7 @@ int main(int argc, char** argv){
 
         // Second loop over rechits of event
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
+            if (!isSaturated) break;
             int      layer   = (*rechitLayer)[iH];
             double   zh      = (*rechitPosz)[iH];
             double   lenergy = (*rechitEnergy)[iH];
@@ -615,12 +619,6 @@ int main(int argc, char** argv){
                 std::tuple<int, int, int, int, int, int> tempsi2(layer,waferU,waferV,cellU,cellV,1);
                 std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc1=saturatedList.find(tempsi1);
                 std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc2=saturatedList.find(tempsi2);
-
-                // Calculate energy without saturated Si cells
-                rechitsum += lenergy;
-                if(ibc1 == saturatedList.end() && ibc2 == saturatedList.end()) {
-                    MLrechitsum += lenergy;
-                }
 
                 /* Perform Simple Average
                 ** First, check if the cell is in a neighbors list
