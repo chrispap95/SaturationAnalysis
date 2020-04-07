@@ -403,7 +403,7 @@ int main(int argc, char** argv){
         **      cellType
         ** }
         */
-        std::vector<std::array<float, 33>> MLvectorev;
+        std::vector<std::array<float, 32>> MLvectorev;
 
         if (ievtRec>=lRecTree->GetEntries()) continue;
         Long64_t local_entry = lRecTree->LoadTree(ievt);
