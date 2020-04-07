@@ -267,7 +267,7 @@ int main(int argc, char** argv){
     float MLn1, MLn2, MLn3, MLn4, MLn5, MLn6;
     float MLdn1, MLdn2, MLdn3, MLdn4, MLdn5, MLdn6;
     float MLun1, MLun2, MLun3, MLun4, MLun5, MLun6;
-    float MLrechitsum, MLsimHits, cellType;
+    float MLrechitsum, MLsimHits, cellType, rechitsum_full;
     TTree* t1 = new TTree("t1","sample");
     t1->Branch("MLlayer"     ,&MLlayer     ,"MLlayer/F"     );
     t1->Branch("MLwaferU"    ,&MLwaferU    ,"MLwaferU/F"    );
@@ -301,6 +301,7 @@ int main(int argc, char** argv){
     t1->Branch("MLrechitsum" ,&MLrechitsum ,"MLrechitsum/F" );
     t1->Branch("MLsimHits"   ,&MLsimHits   ,"MLsimHits/F"   );
     t1->Branch("cellType"    ,&cellType    ,"cellType/F"    );
+    t1->Branch("rechitsum_full" ,&rechitsum_full ,"rechitsum_full/F" );
 
     // Format:
     // <layer, waferU, waferV, cellU, cellV, cellType>
