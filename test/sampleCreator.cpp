@@ -353,6 +353,7 @@ int main(int argc, char** argv){
     std::vector<unsigned> *simhitCellV  = 0;
     std::vector<float   > *genEta       = 0;
     std::vector<float   > *genPhi       = 0;
+    std::vector<float   > *genEnergy    = 0;
     UInt_t event = 0;
 
     lRecTree->SetBranchAddress(  "HGCRecHitEnergy", &rechitEnergy );
@@ -381,7 +382,8 @@ int main(int argc, char** argv){
     lRecTree->SetBranchAddress(  "HGCSimHitsCellV",  &simhitCellV );
     lRecTree->SetBranchAddress(        "GenParEta",       &genEta );
     lRecTree->SetBranchAddress(        "GenParPhi",       &genPhi );
-    lRecTree->SetBranchAddress(            "event",       &event );
+    lRecTree->SetBranchAddress(          "GenParE",    &genEnergy );
+    lRecTree->SetBranchAddress(            "event",        &event );
 
     unsigned ievtRec = 0;
 
@@ -439,7 +441,8 @@ int main(int argc, char** argv){
             lRecTree->SetBranchAddress(  "HGCSimHitsCellV",  &simhitCellV );
             lRecTree->SetBranchAddress(        "GenParEta",       &genEta );
             lRecTree->SetBranchAddress(        "GenParPhi",       &genPhi );
-            lRecTree->SetBranchAddress(            "event",       &event );
+            lRecTree->SetBranchAddress(          "GenParE",    &genEnergy );
+            lRecTree->SetBranchAddress(            "event",        &event );
         }
 
         lRecTree->GetEntry(ievtRec);
@@ -450,6 +453,7 @@ int main(int argc, char** argv){
             etagen   = (*genEta)[0];
             phigen   = (*genPhi)[0];
         }
+        if ((*genEnergy)[0]<2700) std::cout << "Warning: GEN energy too low!" << '\n';
 
         if (debug) std::cout << " - Event contains " << (*rechitEnergy).size()
         << " rechits." << std::endl;
