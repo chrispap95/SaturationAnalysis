@@ -304,15 +304,6 @@ int main(int argc, char** argv){
     t1->Branch("cellType"    ,&cellType    ,"cellType/F"    );
     t1->Branch("rechitsum_full" ,&rechitsum ,"rechitsum_full/F" );
 
-    // Format:
-    // <layer, waferU, waferV, cellU, cellV, cellType>
-    // cellType is 0 for 300um and 1 for 200um
-    std::set<std::tuple<int, int, int, int, int, int>> saturatedList;
-
-    // Define average energy in layers plus and minus 1
-    std::set<std::tuple<int, int, int, int, int, int>> adj_to_saturated;
-    std::set<std::tuple<int, int, int, int, int, int>> adj_to_saturated_inlay;
-
     TH1F* h1 = new TH1F("h1","rechitsum",300,0,3000);
 
     /**********************************
@@ -405,6 +396,15 @@ int main(int argc, char** argv){
         **      cellType
         ** }
         */
+        // Format:
+        // <layer, waferU, waferV, cellU, cellV, cellType>
+        // cellType is 0 for 300um and 1 for 200um
+        std::set<std::tuple<int, int, int, int, int, int>> saturatedList;
+
+        // Define average energy in layers plus and minus 1
+        std::set<std::tuple<int, int, int, int, int, int>> adj_to_saturated;
+        std::set<std::tuple<int, int, int, int, int, int>> adj_to_saturated_inlay;
+
         std::vector<std::array<float, 32>> MLvectorev;
 
         if (ievtRec>=lRecTree->GetEntries()) continue;
@@ -453,7 +453,6 @@ int main(int argc, char** argv){
             etagen   = (*genEta)[0];
             phigen   = (*genPhi)[0];
         }
-        if ((*genEnergy)[0]<2700) std::cout << "Warning: GEN energy too low!" << '\n';
 
         if (debug) std::cout << " - Event contains " << (*rechitEnergy).size()
         << " rechits." << std::endl;
