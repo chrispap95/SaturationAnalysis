@@ -469,8 +469,7 @@ int main(int argc, char** argv){
             0, 0, 0, 0, 0, 0, // dn1, dn2, dn3, dn4, dn5, dn6
             (float)ievt,
             0, 0,             // recHitsum, simhits
-            -1,                 // cellType
-            0                  // full rechitsum
+            -1                 // cellType
         };
         MLvectorev.push_back(bufferArr);
 
