@@ -267,7 +267,8 @@ int main(int argc, char** argv){
     float MLn1, MLn2, MLn3, MLn4, MLn5, MLn6;
     float MLdn1, MLdn2, MLdn3, MLdn4, MLdn5, MLdn6;
     float MLun1, MLun2, MLun3, MLun4, MLun5, MLun6;
-    float MLrechitsum, MLsimHits, cellType, rechitsum_full;
+    float MLrechitsum, MLsimHits, cellType;
+    float rechitsum;
     TTree* t1 = new TTree("t1","sample");
     t1->Branch("MLlayer"     ,&MLlayer     ,"MLlayer/F"     );
     t1->Branch("MLwaferU"    ,&MLwaferU    ,"MLwaferU/F"    );
@@ -301,7 +302,7 @@ int main(int argc, char** argv){
     t1->Branch("MLrechitsum" ,&MLrechitsum ,"MLrechitsum/F" );
     t1->Branch("MLsimHits"   ,&MLsimHits   ,"MLsimHits/F"   );
     t1->Branch("cellType"    ,&cellType    ,"cellType/F"    );
-    t1->Branch("rechitsum_full" ,&rechitsum_full ,"rechitsum_full/F" );
+    t1->Branch("rechitsum_full" ,&rechitsum ,"rechitsum_full/F" );
 
     // Format:
     // <layer, waferU, waferV, cellU, cellV, cellType>
@@ -402,7 +403,7 @@ int main(int argc, char** argv){
         **      cellType
         ** }
         */
-        std::vector<std::array<float, 32>> MLvectorev;
+        std::vector<std::array<float, 33>> MLvectorev;
 
         if (ievtRec>=lRecTree->GetEntries()) continue;
         Long64_t local_entry = lRecTree->LoadTree(ievt);
@@ -453,7 +454,8 @@ int main(int argc, char** argv){
         if (debug) std::cout << " - Event contains " << (*rechitEnergy).size()
         << " rechits." << std::endl;
         double coneSize = 0.3;
-        float rechitsum = 0;
+        rechitsum = 0;
+        MLrechitsum = 0;
 
         // Buffer array that passes rechitsum to the output even when
         // no saturated cells are found
@@ -467,7 +469,8 @@ int main(int argc, char** argv){
             0, 0, 0, 0, 0, 0, // dn1, dn2, dn3, dn4, dn5, dn6
             (float)ievt,
             0, 0,             // recHitsum, simhits
-            -1                 // cellType
+            -1,                 // cellType
+            0                  // full rechitsum
         };
         MLvectorev.push_back(bufferArr);
 
@@ -583,7 +586,6 @@ int main(int argc, char** argv){
             }
         }
 
-        MLrechitsum = 0;
         // Second loop over rechits of event
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
             int      layer   = (*rechitLayer)[iH];
