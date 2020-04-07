@@ -405,6 +405,8 @@ int main(int argc, char** argv){
 
         std::vector<std::array<float, 32>> MLvectorev;
 
+        bool isSaturated = 0;
+
         if (ievtRec>=lRecTree->GetEntries()) continue;
         Long64_t local_entry = lRecTree->LoadTree(ievt);
 
@@ -517,6 +519,7 @@ int main(int argc, char** argv){
                         0                 // cellType
                     };
                     MLvectorev.push_back(tempArr);
+                    isSaturated = 1;
                 }else if(lenergy>41.3 && lenergy<41.45){
                     // Format: (layer, waferU, waferV, cellU, cellV, cellType)
                     std::tuple<int, int, int, int, int, int> saturatedCell;
@@ -540,6 +543,7 @@ int main(int argc, char** argv){
                         1                 // cellType
                     };
                     MLvectorev.push_back(tempArr);
+                    isSaturated = 1;
                 }
             }
         }
@@ -584,6 +588,7 @@ int main(int argc, char** argv){
                 ++iN;
             }
         }
+
 
         // Second loop over rechits of event
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
@@ -734,6 +739,7 @@ int main(int argc, char** argv){
 
         // Loop over simhits of event
         for (unsigned iH(0); iH<(*simhitEnergy).size(); ++iH){
+            if (!isSaturated) break;
             int   layer   = (*simhitLayer)[iH];
             float zh      = (*simhitPosz)[iH];
             float lenergy = (*simhitEnergy)[iH];
