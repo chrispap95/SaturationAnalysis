@@ -614,7 +614,7 @@ int main(int argc, char** argv){
             **     - within DeltaR < 0.3 wrt gen particle
             **     - in positive endcap
             */
-            if(!index && zh > 0 && dR < coneSize) {
+            if(zh > 0 && dR < coneSize) {
                 std::tuple<int, int, int, int, int, int> tempsi1(layer,waferU,waferV,cellU,cellV,0);
                 std::tuple<int, int, int, int, int, int> tempsi2(layer,waferU,waferV,cellU,cellV,1);
                 std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc1=saturatedList.find(tempsi1);
