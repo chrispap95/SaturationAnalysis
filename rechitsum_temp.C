@@ -1,5 +1,12 @@
-std::vector<double> rechitsum_new(int En, int bins, int range, double fit_cut){
-    TString filename = "RegressionResults2/flatRegressionResult_"+to_string(En)+"GeV.root";
+#include "RootStyle.cc"
+
+void rechitsum_temp(){
+    set_root_style();
+    //set_tdr_style();
+    //set_vasu_style();
+    //setTDRStyle();
+
+    TString filename = "RegressionResults2/flatRegressionResult_2800GeV.root";
     TFile* fin = TFile::Open(filename);
     TTree* t1 = dynamic_cast< TTree* >(fin->Get("t1"));
     Float_t rechitsum, truth, regression, event, nup, ndown, cellType, layer;
@@ -34,10 +41,10 @@ std::vector<double> rechitsum_new(int En, int bins, int range, double fit_cut){
     t1->SetBranchAddress(      "layer",      &layer );
 
 
-    TString histname = "single gamma "+to_string(En)+"GeV;recHitSum [GeV];Entries";
-    TH1F* h1;
-    if (En<1000) h1 = new TH1F("h1",histname,bins,En-range,En+range);
-    else h1 = new TH1F("h1",histname,bins,En-2*range,En+range);
+    TString histname = "single gamma 2800 GeV;recHitSum [GeV];Entries";
+    TH1F* h1 = new TH1F("h1",histname,300,1800,3000);
+    TH1F* h2 = new TH1F("h2",histname,300,1800,3000);
+    TH1F* h3 = new TH1F("h3",histname,300,1800,3000);
     int n = t1->GetEntries();
     Float_t event_tmp;
     Float_t rechitsum_nocorr = 0;
@@ -51,8 +58,11 @@ std::vector<double> rechitsum_new(int En, int bins, int range, double fit_cut){
             rechitsum_truth  = rechitsum;
             rechitsum_MLregr = rechitsum;
         }
+
         if(event_tmp != event) {
             h1->Fill(rechitsum_nocorr);
+            h2->Fill(rechitsum_truth);
+            h3->Fill(rechitsum_MLregr);
             rechitsum_nocorr =  rechitsum;
             if (layer > 0 && cellType < 0.5) rechitsum_nocorr  += 27.77;
             if (layer > 0 && cellType > 0.5) rechitsum_nocorr  += 41.37;
@@ -69,23 +79,19 @@ std::vector<double> rechitsum_new(int En, int bins, int range, double fit_cut){
         }
     }
 
-    h1->Draw();
-    TFitResultPtr r = h1->Fit("gaus","Sq","");
-    r = h1->Fit("gaus","S","",r->Parameter(1)-fit_cut*r->Parameter(2),r->Parameter(1)+3*r->Parameter(2));
+    THStack* hs = new THStack("hs","hs");
+    hs->Add(h1);
+    hs->Add(h2);
+    hs->Add(h3);
+    h2->SetLineColor(kRed);
+    h3->SetLineColor(kGreen);
+    hs->Draw("nostack");
+    hs->SetTitle(";Energy [GeV]; Events");
 
-    std::vector<double> output_vector;
-    double a0  = r->Parameter(0);
-    double a1  = r->Parameter(1);
-    double a2  = r->Parameter(2);
-    double a0e = r->ParError(0);
-    double a1e = r->ParError(1);
-    double a2e = r->ParError(2);
-    output_vector.push_back(a0);
-    output_vector.push_back(a1);
-    output_vector.push_back(a2);
-    output_vector.push_back(a0e);
-    output_vector.push_back(a1e);
-    output_vector.push_back(a2e);
-
-    return output_vector;
+    auto *legend = new TLegend(0.15,0.6,0.35,0.88);
+    legend->SetBorderSize(0);
+    legend->AddEntry(h1,"no correction","l");
+    legend->AddEntry(h2,"truth estimation","l");
+    legend->AddEntry(h3,"ML correction","l");
+    legend->Draw();
 }
