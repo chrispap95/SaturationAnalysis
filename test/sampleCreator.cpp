@@ -495,9 +495,9 @@ int main(int argc, char** argv){
             **     - within DeltaR < 0.3 wrt gen particle
             **     - in positive endcap
             */
-            if(!index && zh > 0 && dR < coneSize) {
+            if(zh > 0 && dR < coneSize) {
                 rechitsum += lenergy;
-                if(lenergy>27.7 && lenergy<27.85){
+                if(!index && lenergy>27.7 && lenergy<27.85){
                     // Format: (layer, waferU, waferV, cellU, cellV, cellType)
                     std::tuple<int, int, int, int, int, int> saturatedCell;
                     std::get<0>(saturatedCell) = layer;
@@ -521,7 +521,7 @@ int main(int argc, char** argv){
                     };
                     MLvectorev.push_back(tempArr);
                     isSaturated = 1;
-                }else if(lenergy>41.3 && lenergy<41.45){
+                }else if(!index && lenergy>41.3 && lenergy<41.45){
                     // Format: (layer, waferU, waferV, cellU, cellV, cellType)
                     std::tuple<int, int, int, int, int, int> saturatedCell;
                     std::get<0>(saturatedCell) = layer;
@@ -614,11 +614,11 @@ int main(int argc, char** argv){
             **     - within DeltaR < 0.3 wrt gen particle
             **     - in positive endcap
             */
-            if(zh > 0 && dR < coneSize) {
-                std::tuple<int, int, int, int, int, int> tempsi1(layer,waferU,waferV,cellU,cellV,0);
-                std::tuple<int, int, int, int, int, int> tempsi2(layer,waferU,waferV,cellU,cellV,1);
-                std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc1=saturatedList.find(tempsi1);
-                std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc2=saturatedList.find(tempsi2);
+            if(!index && zh > 0 && dR < coneSize) {
+                //std::tuple<int, int, int, int, int, int> tempsi1(layer,waferU,waferV,cellU,cellV,0);
+                //std::tuple<int, int, int, int, int, int> tempsi2(layer,waferU,waferV,cellU,cellV,1);
+                //std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc1=saturatedList.find(tempsi1);
+                //std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc2=saturatedList.find(tempsi2);
 
                 /* Perform Simple Average
                 ** First, check if the cell is in a neighbors list
