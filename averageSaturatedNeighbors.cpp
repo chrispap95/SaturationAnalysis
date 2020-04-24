@@ -19,7 +19,6 @@ void averageSaturatedNeighbors(){
         nn20[i] = tempVec[3];
     }
 
-
     set_root_style();
     //set_tdr_style();
     //set_vasu_style();

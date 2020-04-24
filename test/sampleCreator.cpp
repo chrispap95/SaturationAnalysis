@@ -268,6 +268,7 @@ int main(int argc, char** argv){
     float MLdn1, MLdn2, MLdn3, MLdn4, MLdn5, MLdn6;
     float MLun1, MLun2, MLun3, MLun4, MLun5, MLun6;
     float MLrechitsum, MLsimHits, cellType;
+    float rechitsum;
     TTree* t1 = new TTree("t1","sample");
     t1->Branch("MLlayer"     ,&MLlayer     ,"MLlayer/F"     );
     t1->Branch("MLwaferU"    ,&MLwaferU    ,"MLwaferU/F"    );
@@ -301,15 +302,7 @@ int main(int argc, char** argv){
     t1->Branch("MLrechitsum" ,&MLrechitsum ,"MLrechitsum/F" );
     t1->Branch("MLsimHits"   ,&MLsimHits   ,"MLsimHits/F"   );
     t1->Branch("cellType"    ,&cellType    ,"cellType/F"    );
-
-    // Format:
-    // <layer, waferU, waferV, cellU, cellV, cellType>
-    // cellType is 0 for 300um and 1 for 200um
-    std::set<std::tuple<int, int, int, int, int, int>> saturatedList;
-
-    // Define average energy in layers plus and minus 1
-    std::set<std::tuple<int, int, int, int, int, int>> adj_to_saturated;
-    std::set<std::tuple<int, int, int, int, int, int>> adj_to_saturated_inlay;
+    t1->Branch("rechitsum_full" ,&rechitsum ,"rechitsum_full/F" );
 
     TH1F* h1 = new TH1F("h1","rechitsum",300,0,3000);
 
@@ -397,7 +390,18 @@ int main(int argc, char** argv){
         **      cellType
         ** }
         */
+        // Format:
+        // <layer, waferU, waferV, cellU, cellV, cellType>
+        // cellType is 0 for 300um and 1 for 200um
+        std::set<std::tuple<int, int, int, int, int, int>> saturatedList;
+
+        // Define average energy in layers plus and minus 1
+        std::set<std::tuple<int, int, int, int, int, int>> adj_to_saturated;
+        std::set<std::tuple<int, int, int, int, int, int>> adj_to_saturated_inlay;
+
         std::vector<std::array<float, 32>> MLvectorev;
+
+        bool isSaturated = 0;
 
         if (ievtRec>=lRecTree->GetEntries()) continue;
         Long64_t local_entry = lRecTree->LoadTree(ievt);
@@ -446,7 +450,8 @@ int main(int argc, char** argv){
         if (debug) std::cout << " - Event contains " << (*rechitEnergy).size()
         << " rechits." << std::endl;
         double coneSize = 0.3;
-        float rechitsum = 0;
+        rechitsum = 0;
+        MLrechitsum = 0;
 
         // Buffer array that passes rechitsum to the output even when
         // no saturated cells are found
@@ -483,8 +488,9 @@ int main(int argc, char** argv){
             **     - within DeltaR < 0.3 wrt gen particle
             **     - in positive endcap
             */
-            if(layer == 15 && zh > 0 && dR < coneSize) {
-                if(lenergy>27.7 && lenergy<27.85){
+            if(zh > 0 && dR < coneSize) {
+                rechitsum += lenergy;
+                if(layer == 15 && lenergy>27.7 && lenergy<27.85){
                     // Format: (layer, waferU, waferV, cellU, cellV, cellType)
                     std::tuple<int, int, int, int, int, int> saturatedCell;
                     std::get<0>(saturatedCell) = layer;
@@ -507,7 +513,8 @@ int main(int argc, char** argv){
                         0                 // cellType
                     };
                     MLvectorev.push_back(tempArr);
-                }else if(lenergy>41.3 && lenergy<41.45){
+                    isSaturated = 1;
+                }else if(layer==15 && lenergy>41.3 && lenergy<41.45){
                     // Format: (layer, waferU, waferV, cellU, cellV, cellType)
                     std::tuple<int, int, int, int, int, int> saturatedCell;
                     std::get<0>(saturatedCell) = layer;
@@ -530,6 +537,9 @@ int main(int argc, char** argv){
                         1                 // cellType
                     };
                     MLvectorev.push_back(tempArr);
+                    isSaturated = 1;
+                }else{
+                    MLrechitsum += lenergy;
                 }
             }
         }
@@ -575,9 +585,10 @@ int main(int argc, char** argv){
             }
         }
 
-        MLrechitsum = 0;
+
         // Second loop over rechits of event
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
+            if (!isSaturated) break;
             int      layer   = (*rechitLayer)[iH];
             double   zh      = (*rechitPosz)[iH];
             double   lenergy = (*rechitEnergy)[iH];
@@ -595,17 +606,9 @@ int main(int argc, char** argv){
             **     - within DeltaR < 0.3 wrt gen particle
             **     - in positive endcap
             */
-            if(layer == 15 && zh > 0 && dR < coneSize) {
-                std::tuple<int, int, int, int, int, int> tempsi1(layer,waferU,waferV,cellU,cellV,0);
+            if((layer==14 || layer==15 || layer==16) && zh > 0 && dR < coneSize) {
+               std::tuple<int, int, int, int, int, int> tempsi1(layer,waferU,waferV,cellU,cellV,0);
                 std::tuple<int, int, int, int, int, int> tempsi2(layer,waferU,waferV,cellU,cellV,1);
-                std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc1=saturatedList.find(tempsi1);
-                std::set<std::tuple<int, int, int, int, int, int>>::iterator ibc2=saturatedList.find(tempsi2);
-
-                // Calculate energy without saturated Si cells
-                rechitsum += lenergy;
-                if(ibc1 == saturatedList.end() && ibc2 == saturatedList.end()) {
-                    MLrechitsum += lenergy;
-                }
 
                 /* Perform Simple Average
                 ** First, check if the cell is in a neighbors list
@@ -724,6 +727,7 @@ int main(int argc, char** argv){
 
         // Loop over simhits of event
         for (unsigned iH(0); iH<(*simhitEnergy).size(); ++iH){
+            if (!isSaturated) break;
             int   layer   = (*simhitLayer)[iH];
             float zh      = (*simhitPosz)[iH];
             float lenergy = (*simhitEnergy)[iH];
@@ -741,7 +745,7 @@ int main(int argc, char** argv){
             **     - within DeltaR < 0.3 wrt gen particle
             **     - in positive endcap
             */
-            if(layer == 15 && zh > 0 && dR < coneSize) {
+            if(layer==15 && zh > 0 && dR < coneSize) {
                 for(auto itr = MLvectorev.begin(); itr != MLvectorev.end(); ++itr) {
                     if(
                         (*itr)[0] == layer  && (*itr)[1] == waferU &&

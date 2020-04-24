@@ -45,6 +45,7 @@ void rechitsum_temp(){
     TH1F* h1 = new TH1F("h1",histname,200,1800,3000);
     TH1F* h2 = new TH1F("h2",histname,200,1800,3000);
     TH1F* h3 = new TH1F("h3",histname,200,1800,3000);
+
     int n = t1->GetEntries();
     Float_t event_tmp;
     Float_t rechitsum_nocorr = 0;
