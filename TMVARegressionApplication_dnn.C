@@ -93,7 +93,7 @@ void TMVARegressionApplication_dnn(int energy) {
     //
     string energy_str = to_string(energy);
     TFile *input(0);
-    TString fname = "EvaluationSamples/out_E"+energy_str+"Eta1p7_converted.root";
+    TString fname = "EvaluationSamples2/out_E"+energy_str+"Eta1p7_0_converted.root";
     if (!gSystem->AccessPathName( fname )) {
         input = TFile::Open( fname ); // check if file in local directory exists
     }
@@ -142,7 +142,7 @@ void TMVARegressionApplication_dnn(int energy) {
     theTree->SetBranchAddress( "rechitsum", &rechitsum );
     theTree->SetBranchAddress(    "rechit",    &rechit ); // Unsaturated rechit estimation
 
-    TString foutname = "RegressionResults/flatRegressionResult_"+energy_str+"GeV.root";
+    TString foutname = "RegressionResults2/flatRegressionResult_"+energy_str+"GeV.root";
     TFile *target  = new TFile( foutname,"RECREATE" );
     TTree* t1 = new TTree("t1","sample");
     Float_t val;

@@ -490,7 +490,7 @@ int main(int argc, char** argv){
             */
             if(zh > 0 && dR < coneSize) {
                 rechitsum += lenergy;
-                if(layer==15 && lenergy>27.7 && lenergy<27.85){
+                if(layer == 15 && lenergy>27.7 && lenergy<27.85){
                     // Format: (layer, waferU, waferV, cellU, cellV, cellType)
                     std::tuple<int, int, int, int, int, int> saturatedCell;
                     std::get<0>(saturatedCell) = layer;
@@ -606,8 +606,8 @@ int main(int argc, char** argv){
             **     - within DeltaR < 0.3 wrt gen particle
             **     - in positive endcap
             */
-            if(layer==15 && zh > 0 && dR < coneSize) {
-                std::tuple<int, int, int, int, int, int> tempsi1(layer,waferU,waferV,cellU,cellV,0);
+            if((layer==14 || layer==15 || layer==16) && zh > 0 && dR < coneSize) {
+               std::tuple<int, int, int, int, int, int> tempsi1(layer,waferU,waferV,cellU,cellV,0);
                 std::tuple<int, int, int, int, int, int> tempsi2(layer,waferU,waferV,cellU,cellV,1);
 
                 /* Perform Simple Average

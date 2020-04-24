@@ -1,8 +1,8 @@
 std::vector<double> rechitsum_new(int En, int bins, int range, double fit_cut){
-    TString filename = "RegressionResults/flatRegressionResult_"+to_string(En)+"GeV.root";
+    TString filename = "RegressionResults2/flatRegressionResult_"+to_string(En)+"GeV.root";
     TFile* fin = TFile::Open(filename);
     TTree* t1 = dynamic_cast< TTree* >(fin->Get("t1"));
-    Float_t rechitsum, truth, regression, event, nup, ndown;
+    Float_t rechitsum, truth, regression, event, nup, ndown, cellType, layer;
     Float_t  n1,  n2,  n3,  n4,  n5,  n6;
     Float_t un1, un2, un3, un4, un5, un6;
     Float_t dn1, dn2, dn3, dn4, dn5, dn6;
@@ -30,23 +30,32 @@ std::vector<double> rechitsum_new(int En, int bins, int range, double fit_cut){
     t1->SetBranchAddress(     "rechit",      &truth );
     t1->SetBranchAddress(      "event",      &event );
     t1->SetBranchAddress( "regression", &regression );
+    t1->SetBranchAddress(   "cellType",   &cellType );
+    t1->SetBranchAddress(      "layer",      &layer );
 
 
     TString histname = "single gamma "+to_string(En)+"GeV;recHitSum [GeV];Entries";
-    TH1F* h1 = new TH1F("h1",histname,bins,En-range,En+range);
+    TH1F* h1;
+    if (En<1000) h1 = new TH1F("h1",histname,bins,En-range,En+range);
+    else h1 = new TH1F("h1",histname,bins,En-range,En+range);
     int n = t1->GetEntries();
     Float_t event_tmp;
+    Float_t rechitsum_nocorr = 0;
     Float_t rechitsum_truth  = 0;
     Float_t rechitsum_MLregr = 0;
     for(int i = 0; i <= n; ++i){
         t1->GetEntry(i);
         if(i == 0) {
             event_tmp = event;
+            rechitsum_nocorr = rechitsum;
             rechitsum_truth  = rechitsum;
             rechitsum_MLregr = rechitsum;
         }
         if(event_tmp != event) {
-            h1->Fill(rechitsum);
+            h1->Fill(rechitsum_MLregr);
+            rechitsum_nocorr =  rechitsum;
+            if (layer > 0 && cellType < 0.5) rechitsum_nocorr  += 27.77;
+            if (layer > 0 && cellType > 0.5) rechitsum_nocorr  += 41.37;
             rechitsum_truth  =  rechitsum;
             rechitsum_truth  += truth;
             rechitsum_MLregr =  rechitsum;
@@ -55,6 +64,8 @@ std::vector<double> rechitsum_new(int En, int bins, int range, double fit_cut){
         }else{
             rechitsum_truth  += truth;
             rechitsum_MLregr += regression;
+            if (layer > 0 && cellType < 0.5) rechitsum_nocorr  += 27.77;
+            if (layer > 0 && cellType > 0.5) rechitsum_nocorr  += 41.37;
         }
     }
 
