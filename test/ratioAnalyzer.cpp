@@ -105,7 +105,8 @@ int main(int argc, char** argv){
 
     TChain *lRecTree = 0;
 
-    lRecTree = new TChain("hgcalTupleTree/tree");
+    //lRecTree = new TChain("hgcalTupleTree/tree");
+    lRecTree = new TChain("ana/hgc");
 
     if (nRuns == 0){
         lRecTree->AddFile(inputrec.str().c_str());
@@ -139,7 +140,7 @@ int main(int argc, char** argv){
     }
     outputFile->cd();
 
-    TH1F* h1 = new TH1F("h1","sat1",1000,122.1,122.4);
+    TH1F* h1 = new TH1F("h1","sat1",1000,121.8,122.3);
     TH1F* h2 = new TH1F("h2","sat1",1000,182,182.3);
     TH1F* h3 = new TH1F("h3","sat3",1000,100,200);
 
@@ -182,32 +183,61 @@ int main(int argc, char** argv){
     std::vector<float   > *genEta       = 0;
     std::vector<float   > *genPhi       = 0;
 
-    lRecTree->SetBranchAddress("HGCRecHitEnergy" ,&rechitEnergy);
-    lRecTree->SetBranchAddress("HGCRecHitEta"    ,&rechitEta);
-    lRecTree->SetBranchAddress("HGCRecHitPhi"    ,&rechitPhi);
-    lRecTree->SetBranchAddress("HGCRecHitPosx"   ,&rechitPosx);
-    lRecTree->SetBranchAddress("HGCRecHitPosy"   ,&rechitPosy);
-    lRecTree->SetBranchAddress("HGCRecHitPosz"   ,&rechitPosz);
-    lRecTree->SetBranchAddress("HGCRecHitLayer"  ,&rechitLayer);
-    lRecTree->SetBranchAddress("HGCRecHitIndex"  ,&rechitIndex);
-    lRecTree->SetBranchAddress("HGCRecHitWaferU" ,&rechitWaferU);
-    lRecTree->SetBranchAddress("HGCRecHitWaferV" ,&rechitWaferV);
-    lRecTree->SetBranchAddress("HGCRecHitCellU"  ,&rechitCellU);
-    lRecTree->SetBranchAddress("HGCRecHitCellV"  ,&rechitCellV);
-    lRecTree->SetBranchAddress("HGCSimHitsEnergy",&simhitEnergy);
-    lRecTree->SetBranchAddress("HGCSimHitsEta"   ,&simhitEta);
-    lRecTree->SetBranchAddress("HGCSimHitsPhi"   ,&simhitPhi);
-    lRecTree->SetBranchAddress("HGCSimHitsPosx"  ,&simhitPosx);
-    lRecTree->SetBranchAddress("HGCSimHitsPosy"  ,&simhitPosy);
-    lRecTree->SetBranchAddress("HGCSimHitsPosz"  ,&simhitPosz);
-    lRecTree->SetBranchAddress("HGCSimHitsLayer" ,&simhitLayer);
-    lRecTree->SetBranchAddress("HGCSimHitsIndex" ,&simhitIndex);
-    lRecTree->SetBranchAddress("HGCSimHitsWaferU",&simhitWaferU);
-    lRecTree->SetBranchAddress("HGCSimHitsWaferV",&simhitWaferV);
-    lRecTree->SetBranchAddress("HGCSimHitsCellU" ,&simhitCellU);
-    lRecTree->SetBranchAddress("HGCSimHitsCellV" ,&simhitCellV);
-    lRecTree->SetBranchAddress("GenParEta"       ,&genEta);
-    lRecTree->SetBranchAddress("GenParPhi"       ,&genPhi);
+    if (0){
+    	lRecTree->SetBranchAddress("HGCRecHitEnergy" ,&rechitEnergy);
+    	lRecTree->SetBranchAddress("HGCRecHitEta"    ,&rechitEta);
+    	lRecTree->SetBranchAddress("HGCRecHitPhi"    ,&rechitPhi);
+    	lRecTree->SetBranchAddress("HGCRecHitPosx"   ,&rechitPosx);
+    	lRecTree->SetBranchAddress("HGCRecHitPosy"   ,&rechitPosy);
+    	lRecTree->SetBranchAddress("HGCRecHitPosz"   ,&rechitPosz);
+    	lRecTree->SetBranchAddress("HGCRecHitLayer"  ,&rechitLayer);
+    	lRecTree->SetBranchAddress("HGCRecHitIndex"  ,&rechitIndex);
+    	lRecTree->SetBranchAddress("HGCRecHitWaferU" ,&rechitWaferU);
+    	lRecTree->SetBranchAddress("HGCRecHitWaferV" ,&rechitWaferV);
+    	lRecTree->SetBranchAddress("HGCRecHitCellU"  ,&rechitCellU);
+    	lRecTree->SetBranchAddress("HGCRecHitCellV"  ,&rechitCellV);
+    	lRecTree->SetBranchAddress("HGCSimHitsEnergy",&simhitEnergy);
+    	lRecTree->SetBranchAddress("HGCSimHitsEta"   ,&simhitEta);
+    	lRecTree->SetBranchAddress("HGCSimHitsPhi"   ,&simhitPhi);
+    	lRecTree->SetBranchAddress("HGCSimHitsPosx"  ,&simhitPosx);
+    	lRecTree->SetBranchAddress("HGCSimHitsPosy"  ,&simhitPosy);
+    	lRecTree->SetBranchAddress("HGCSimHitsPosz"  ,&simhitPosz);
+    	lRecTree->SetBranchAddress("HGCSimHitsLayer" ,&simhitLayer);
+    	lRecTree->SetBranchAddress("HGCSimHitsIndex" ,&simhitIndex);
+    	lRecTree->SetBranchAddress("HGCSimHitsWaferU",&simhitWaferU);
+    	lRecTree->SetBranchAddress("HGCSimHitsWaferV",&simhitWaferV);
+    	lRecTree->SetBranchAddress("HGCSimHitsCellU" ,&simhitCellU);
+    	lRecTree->SetBranchAddress("HGCSimHitsCellV" ,&simhitCellV);
+    	lRecTree->SetBranchAddress("GenParEta"       ,&genEta);
+    	lRecTree->SetBranchAddress("GenParPhi"       ,&genPhi);
+    }
+    else if (1){
+    	lRecTree->SetBranchAddress("rechit_energy" ,&rechitEnergy);
+    	lRecTree->SetBranchAddress("rechit_eta"    ,&rechitEta);
+    	lRecTree->SetBranchAddress("rechit_phi"    ,&rechitPhi);
+    	lRecTree->SetBranchAddress("rechit_x"   ,&rechitPosx);
+    	lRecTree->SetBranchAddress("rechit_y"   ,&rechitPosy);
+    	lRecTree->SetBranchAddress("rechit_z"   ,&rechitPosz);
+    	lRecTree->SetBranchAddress("rechit_layer"  ,&rechitLayer);
+    	lRecTree->SetBranchAddress("rechit_wafer_u" ,&rechitWaferU);
+    	lRecTree->SetBranchAddress("rechit_wafer_v" ,&rechitWaferV);
+    	lRecTree->SetBranchAddress("rechit_cell_u"  ,&rechitCellU);
+    	lRecTree->SetBranchAddress("rechit_cell_v"  ,&rechitCellV);
+    	lRecTree->SetBranchAddress("simhit_energy",&simhitEnergy);
+    	lRecTree->SetBranchAddress("simhit_eta"   ,&simhitEta);
+    	lRecTree->SetBranchAddress("simhit_phi"   ,&simhitPhi);
+    	lRecTree->SetBranchAddress("simhit_x"  ,&simhitPosx);
+    	lRecTree->SetBranchAddress("simhit_y"  ,&simhitPosy);
+    	lRecTree->SetBranchAddress("simhit_z"  ,&simhitPosz);
+    	lRecTree->SetBranchAddress("simhit_layer" ,&simhitLayer);
+    	lRecTree->SetBranchAddress("simhit_wafer_u",&simhitWaferU);
+    	lRecTree->SetBranchAddress("simhit_wafer_v",&simhitWaferV);
+    	lRecTree->SetBranchAddress("simhit_cell_u" ,&simhitCellU);
+    	lRecTree->SetBranchAddress("simhit_cell_v" ,&simhitCellV);
+    	lRecTree->SetBranchAddress("gen_eta"       ,&genEta);
+    	lRecTree->SetBranchAddress("gen_phi"       ,&genPhi);
+    }
+
 
     unsigned ievtRec = 0;
 
@@ -221,32 +251,60 @@ int main(int argc, char** argv){
 
         if (local_entry < 0) continue;
         if (local_entry == 0) {
-            lRecTree->SetBranchAddress("HGCRecHitEnergy" ,&rechitEnergy);
-            lRecTree->SetBranchAddress("HGCRecHitEta"    ,&rechitEta);
-            lRecTree->SetBranchAddress("HGCRecHitPhi"    ,&rechitPhi);
-            lRecTree->SetBranchAddress("HGCRecHitPosx"   ,&rechitPosx);
-            lRecTree->SetBranchAddress("HGCRecHitPosy"   ,&rechitPosy);
-            lRecTree->SetBranchAddress("HGCRecHitPosz"   ,&rechitPosz);
-            lRecTree->SetBranchAddress("HGCRecHitLayer"  ,&rechitLayer);
-            lRecTree->SetBranchAddress("HGCRecHitIndex"  ,&rechitIndex);
-            lRecTree->SetBranchAddress("HGCRecHitWaferU" ,&rechitWaferU);
-            lRecTree->SetBranchAddress("HGCRecHitWaferV" ,&rechitWaferV);
-            lRecTree->SetBranchAddress("HGCRecHitCellU"  ,&rechitCellU);
-            lRecTree->SetBranchAddress("HGCRecHitCellV"  ,&rechitCellV);
-            lRecTree->SetBranchAddress("HGCSimHitsEnergy",&simhitEnergy);
-            lRecTree->SetBranchAddress("HGCSimHitsEta"   ,&simhitEta);
-            lRecTree->SetBranchAddress("HGCSimHitsPhi"   ,&simhitPhi);
-            lRecTree->SetBranchAddress("HGCSimHitsPosx"  ,&simhitPosx);
-            lRecTree->SetBranchAddress("HGCSimHitsPosy"  ,&simhitPosy);
-            lRecTree->SetBranchAddress("HGCSimHitsPosz"  ,&simhitPosz);
-            lRecTree->SetBranchAddress("HGCSimHitsLayer" ,&simhitLayer);
-            lRecTree->SetBranchAddress("HGCSimHitsIndex" ,&simhitIndex);
-            lRecTree->SetBranchAddress("HGCSimHitsWaferU",&simhitWaferU);
-            lRecTree->SetBranchAddress("HGCSimHitsWaferV",&simhitWaferV);
-            lRecTree->SetBranchAddress("HGCSimHitsCellU" ,&simhitCellU);
-            lRecTree->SetBranchAddress("HGCSimHitsCellV" ,&simhitCellV);
-            lRecTree->SetBranchAddress("GenParEta"       ,&genEta);
-            lRecTree->SetBranchAddress("GenParPhi"       ,&genPhi);
+	    if (0){
+    		lRecTree->SetBranchAddress("HGCRecHitEnergy" ,&rechitEnergy);
+    		lRecTree->SetBranchAddress("HGCRecHitEta"    ,&rechitEta);
+    		lRecTree->SetBranchAddress("HGCRecHitPhi"    ,&rechitPhi);
+    		lRecTree->SetBranchAddress("HGCRecHitPosx"   ,&rechitPosx);
+    		lRecTree->SetBranchAddress("HGCRecHitPosy"   ,&rechitPosy);
+    		lRecTree->SetBranchAddress("HGCRecHitPosz"   ,&rechitPosz);
+    		lRecTree->SetBranchAddress("HGCRecHitLayer"  ,&rechitLayer);
+    		lRecTree->SetBranchAddress("HGCRecHitIndex"  ,&rechitIndex);
+    		lRecTree->SetBranchAddress("HGCRecHitWaferU" ,&rechitWaferU);
+    		lRecTree->SetBranchAddress("HGCRecHitWaferV" ,&rechitWaferV);
+    		lRecTree->SetBranchAddress("HGCRecHitCellU"  ,&rechitCellU);
+    		lRecTree->SetBranchAddress("HGCRecHitCellV"  ,&rechitCellV);
+    		lRecTree->SetBranchAddress("HGCSimHitsEnergy",&simhitEnergy);
+    		lRecTree->SetBranchAddress("HGCSimHitsEta"   ,&simhitEta);
+    		lRecTree->SetBranchAddress("HGCSimHitsPhi"   ,&simhitPhi);
+    		lRecTree->SetBranchAddress("HGCSimHitsPosx"  ,&simhitPosx);
+    		lRecTree->SetBranchAddress("HGCSimHitsPosy"  ,&simhitPosy);
+    		lRecTree->SetBranchAddress("HGCSimHitsPosz"  ,&simhitPosz);
+    		lRecTree->SetBranchAddress("HGCSimHitsLayer" ,&simhitLayer);
+    		lRecTree->SetBranchAddress("HGCSimHitsIndex" ,&simhitIndex);
+    		lRecTree->SetBranchAddress("HGCSimHitsWaferU",&simhitWaferU);
+    		lRecTree->SetBranchAddress("HGCSimHitsWaferV",&simhitWaferV);
+    		lRecTree->SetBranchAddress("HGCSimHitsCellU" ,&simhitCellU);
+    		lRecTree->SetBranchAddress("HGCSimHitsCellV" ,&simhitCellV);
+    		lRecTree->SetBranchAddress("GenParEta"       ,&genEta);
+    		lRecTree->SetBranchAddress("GenParPhi"       ,&genPhi);
+    	    }
+    	    else if (1){
+    		lRecTree->SetBranchAddress("rechit_energy" ,&rechitEnergy);
+    		lRecTree->SetBranchAddress("rechit_eta"    ,&rechitEta);
+    		lRecTree->SetBranchAddress("rechit_phi"    ,&rechitPhi);
+    		lRecTree->SetBranchAddress("rechit_x"   ,&rechitPosx);
+    		lRecTree->SetBranchAddress("rechit_y"   ,&rechitPosy);
+    		lRecTree->SetBranchAddress("rechit_z"   ,&rechitPosz);
+    		lRecTree->SetBranchAddress("rechit_layer"  ,&rechitLayer);
+    		lRecTree->SetBranchAddress("rechit_wafer_u" ,&rechitWaferU);
+    		lRecTree->SetBranchAddress("rechit_wafer_v" ,&rechitWaferV);
+    		lRecTree->SetBranchAddress("rechit_cell_u"  ,&rechitCellU);
+    		lRecTree->SetBranchAddress("rechit_cell_v"  ,&rechitCellV);
+    		lRecTree->SetBranchAddress("simhit_energy",&simhitEnergy);
+    		lRecTree->SetBranchAddress("simhit_eta"   ,&simhitEta);
+    		lRecTree->SetBranchAddress("simhit_phi"   ,&simhitPhi);
+    		lRecTree->SetBranchAddress("simhit_x"  ,&simhitPosx);
+    		lRecTree->SetBranchAddress("simhit_y"  ,&simhitPosy);
+    		lRecTree->SetBranchAddress("simhit_z"  ,&simhitPosz);
+    		lRecTree->SetBranchAddress("simhit_layer" ,&simhitLayer);
+    		lRecTree->SetBranchAddress("simhit_wafer_u",&simhitWaferU);
+    		lRecTree->SetBranchAddress("simhit_wafer_v",&simhitWaferV);
+    		lRecTree->SetBranchAddress("simhit_cell_u" ,&simhitCellU);
+    		lRecTree->SetBranchAddress("simhit_cell_v" ,&simhitCellV);
+    		lRecTree->SetBranchAddress("gen_eta"       ,&genEta);
+    		lRecTree->SetBranchAddress("gen_phi"       ,&genPhi);
+    	    }
         }
 
         lRecTree->GetEntry(ievtRec);
@@ -286,7 +344,7 @@ int main(int argc, char** argv){
             **     - within DeltaR < 0.3 wrt gen particle
             **     - in positive endcap
             */
-            if(!index && zh > 0 && dR < coneSize) {
+            if(layer == 15 && zh > 0 && dR < coneSize) {
                 if(lenergy>20 && lenergy<27){
                     // Format: (layer, waferU, waferV, cellU, cellV)
                     std::tuple<int, int, int, int, int, float, float> saturatedCell;
@@ -334,7 +392,7 @@ int main(int argc, char** argv){
             **     - within DeltaR < 0.3 wrt gen particle
             **     - in positive endcap
             */
-            if(!index && zh > 0 && dR < coneSize) {
+            if(layer == 15 && zh > 0 && dR < coneSize) {
                 for(auto itr = saturatedList1.begin(); itr != saturatedList1.end(); ++itr) {
                     if(
                         std::get<0>(*itr) == layer  && std::get<1>(*itr) == waferU &&
