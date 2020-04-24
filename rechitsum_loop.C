@@ -17,8 +17,8 @@ void rechitsum_loop(){
 
     double energies[]   = {  5, 10, 15, 20, 30, 40, 60, 80,100,140,200,280,400,550,750,1000,1400,2000,2800};
     int bins[]          = {100,100,100,100,100,100,100,100,100,100,100,100,100,100,100, 100, 100, 100, 100};
-    int range[]         = {  3,  5,  5, 10, 10, 10, 15, 15, 15, 20, 25, 30, 40,100,150, 150, 200, 300, 500};
-    double fit_cut[]    = {1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.4,1.4,1.4, 1.2, 1.6, 1.6, 1.6};
+    int range[]         = {  3,  5,  5, 10, 10, 10, 15, 15, 15, 20, 25, 30, 40, 50,100, 150, 200, 300, 400};
+    double fit_cut[]    = {1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.5,1.5,1.5, 1.5, 1.7, 1.7, 1.5};
 
     double scemean[]   = {0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.};
     double scemeane[]  = {0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.};
@@ -26,7 +26,8 @@ void rechitsum_loop(){
     double scerese[]   = {0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.};
     double energiese[] = {0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.};
 
-    /*double energies[]  = {750,1000,1400,2000,2800};
+    /*
+    double energies[]  = {750,1000,1400,2000,2800};
     int bins[]         = {100, 100, 100, 100, 200};
     int range[]        = {100, 100, 100, 100, 200};
     double fit_cut[]   = {1.0, 0.7, 0.7, 0.9, 0.9};
@@ -40,7 +41,8 @@ void rechitsum_loop(){
     double scemeane[]  = {0.,0.,0.,0.,0.};
     double sceres[]    = {0.,0.,0.,0.,0.};
     double scerese[]   = {0.,0.,0.,0.,0.};
-    double energiese[] = {0.,0.,0.,0.,0.};*/
+    double energiese[] = {0.,0.,0.,0.,0.};
+    */
 
     for(int j = 0; j < 19; ++j){
         if(j < 4) c1->cd(j%4+1);
@@ -66,17 +68,17 @@ void rechitsum_loop(){
     gr->SetMarkerStyle(21);
     TF1  *f2 = new TF1("f2","sqrt(([0]/sqrt(x))**2+([1]/x)**2+([2])**2)");
     f2->SetNpx(1000);
-    gr->Fit("f2");
+    //gr->Fit("f2");
     gr->Draw("AP");
 
-    /*
-    TString outname = "res_nocorr.root";
+    TString outname = "outputFiles/out_mlCorr.root";
     TFile* out = new TFile(outname,"RECREATE");
     gr->Write();
     out->Close();
 
+    /*
     //Print PDFs
-    /*TString cname1  = "outputFiles2/canvas1_df0"+to_string(df)+"_LSaver.pdf";
+    TString cname1  = "outputFiles2/canvas1_df0"+to_string(df)+"_LSaver.pdf";
     TString cname2  = "outputFiles2/canvas2_df0"+to_string(df)+"_LSaver.pdf";
     TString cname3  = "outputFiles2/canvas3_df0"+to_string(df)+"_LSaver.pdf";
     TString cname4  = "outputFiles2/canvas4_df0"+to_string(df)+"_LSaver.pdf";

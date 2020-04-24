@@ -63,7 +63,13 @@ void treeConverter(TString input){
 
     for (int i = 0; i < t->GetEntries(); ++i) {
         t->GetEntry(i);
-        if(!cellType) rechit = 122.24305*simhits; // 300um cells
+        /*
+        ** Fit results:
+        ** mean  122.092 \pm 0.00015
+        ** sigma 0.013
+        */
+        //if(!cellType) rechit = 122.24305*simhits; // 300um cells
+        if(!cellType) rechit = 122.092*simhits; // 300um cells
         else rechit = 182.13023*simhits;          // 200um cells
         t1->Fill();
     }

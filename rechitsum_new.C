@@ -37,7 +37,7 @@ std::vector<double> rechitsum_new(int En, int bins, int range, double fit_cut){
     TString histname = "single gamma "+to_string(En)+"GeV;recHitSum [GeV];Entries";
     TH1F* h1;
     if (En<1000) h1 = new TH1F("h1",histname,bins,En-range,En+range);
-    else h1 = new TH1F("h1",histname,bins,En-2*range,En+range);
+    else h1 = new TH1F("h1",histname,bins,En-range,En+range);
     int n = t1->GetEntries();
     Float_t event_tmp;
     Float_t rechitsum_nocorr = 0;
@@ -52,7 +52,7 @@ std::vector<double> rechitsum_new(int En, int bins, int range, double fit_cut){
             rechitsum_MLregr = rechitsum;
         }
         if(event_tmp != event) {
-            h1->Fill(rechitsum_nocorr);
+            h1->Fill(rechitsum_MLregr);
             rechitsum_nocorr =  rechitsum;
             if (layer > 0 && cellType < 0.5) rechitsum_nocorr  += 27.77;
             if (layer > 0 && cellType > 0.5) rechitsum_nocorr  += 41.37;

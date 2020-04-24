@@ -1,3 +1,5 @@
+#include "RootStyle.cc"
+
 bool isSaturated(float rechit);
 
 std::vector<float> averageCalculator(int En);
@@ -16,6 +18,12 @@ void averageSaturatedNeighbors(){
         nn8[i]  = tempVec[2];
         nn20[i] = tempVec[3];
     }
+
+
+    set_root_style();
+    //set_tdr_style();
+    //set_vasu_style();
+    //setTDRStyle();
 
     TCanvas* c = new TCanvas("c","c",1);
     TGraph* gr6  = new TGraph(6, En,  nn6);
