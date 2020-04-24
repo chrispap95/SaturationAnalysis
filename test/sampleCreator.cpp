@@ -342,7 +342,7 @@ int main(int argc, char** argv){
     std::vector<unsigned> *simhitCellV  = 0;
     std::vector<float   > *genEta       = 0;
     std::vector<float   > *genPhi       = 0;
-    UInt_t event = 0;
+    ULong64_t event = 0;
 
     lRecTree->SetBranchAddress( "rechit_energy", &rechitEnergy );
     lRecTree->SetBranchAddress( "rechit_eta", &rechitEta );
