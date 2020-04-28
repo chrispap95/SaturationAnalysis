@@ -1,3 +1,11 @@
+/*
+** Script:
+**    - Renames branch names
+**    - Adds rechit truth estimation
+**    - Skims the data for cells that don't qualify for training set
+**        ~ cells that are on the wafer edges
+*/
+
 void treeConverter(TString input){
     TFile* f = TFile::Open(input+".root");
     TTree* t = dynamic_cast< TTree* >(f->Get("t1"));
@@ -69,8 +77,8 @@ void treeConverter(TString input){
         ** sigma 0.013
         */
         //if(!cellType) rechit = 122.24305*simhits; // 300um cells
-        if(!cellType) rechit = 122.092*simhits; // 300um cells
-        else rechit = 182.13023*simhits;          // 200um cells
+        if(!cellType && layer>0 && simhits>0) rechit = 122.092*simhits; // 300um cells
+        //else rechit = 182.13023*simhits;          // 200um cells
         t1->Fill();
     }
     fout->cd();
