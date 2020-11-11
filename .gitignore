@@ -10,7 +10,6 @@ docker_stderror
 *.cachefile
 *.icloud
 
-
 # Tar files
 *.tar
 *.tgz

@@ -1,27 +1,31 @@
 #!/usr/bin/sh
+source ${PWD}/prepareCondor.sh
 
-for i in `seq 0 19`
+eta=1p7
+energies=(5 10 20 40 60 80 100)
+
+for En in ${energies[@]}
 do
-for E in 400 550 750 1000 1400
-do
-for df in 7
-do
-cat > condor_E${E}Eta1p7_df0${df}_${i}.jdl << "EOF"
+namestring=E${En}Eta${eta}
+argument=sampleCreator_${namestring}.cfg\ out_${namestring}.root\ ${CMSSW_VERSION}\ ${USER}
+
+# Write jdl file
+cat > condor_${namestring}.jdl << "EOF"
 universe = vanilla
 Executable = condor-exec.csh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
-Transfer_Input_Files = condor-exec.csh, CMSSW_10_6_3_patch1.tgz
 EOF
-echo "Arguments = simpleBH_E${E}Eta1p7_df0${df}_${i}.cfg out_E${E}Eta1p7_df0${df}_${i}.root" >> condor_E${E}Eta1p7_df0${df}_${i}.jdl
-cat >> condor_E${E}Eta1p7_df0${df}_${i}.jdl << "EOF"
-Output = simpleBH_$(Cluster)_$(Process).stdout
-Error = simpleBH_$(Cluster)_$(Process).stderr
-Log = simpleBH_$(Cluster)_$(Process).log
+echo "Transfer_Input_Files = condor-exec.csh, ${CMSSW_VERSION}.tgz" >> condor_${namestring}.jdl
+echo "Arguments = ${argument}" >> condor_${namestring}.jdl
+cat >> condor_${namestring}.jdl << "EOF"
+Output = sampleCreator_$(Cluster)_$(Process).stdout
+Error = sampleCreator_$(Cluster)_$(Process).stderr
+Log = sampleCreator_$(Cluster)_$(Process).log
 x509userproxy = $ENV(X509_USER_PROXY)
 Queue 1
 EOF
-condor_submit condor_E${E}Eta1p7_df0${df}_${i}.jdl
-done
-done
+
+# Submit job
+condor_submit condor_${namestring}.jdl
 done

@@ -1,13 +1,25 @@
 #!/usr/bin/sh
 
-for i in 2000 2800
+# Basic configuration values - self explanatory
+
+eta=1p7
+pGenerator=SingleGamma
+cmssw=${CMSSW_VERSION}
+geometry=upgrade2023_D41
+siteUrl=root://cmseos.fnal.gov/
+energies=(5 10 20 40 60 80 100)
+filesToProcess=200
+
+# Loop over dead fractions and energies
+# nRuns: number of files to process
+
+for En in ${energies[@]}
 do
-echo "outFilePath = out_E${i}Eta1p7.root" > simpleBH_E${i}Eta1p7.cfg
-echo "filePath = root://cmseos.fnal.gov//store/user/chpapage/SingleGamma_E${i}Eta1p7/SingleGamma_E${i}Eta1p7_CMSSW_10_6_3_patch1_upgrade2023_D41_ntuples/"`ls /eos/uscms/store/user/\
-chpapage/SingleGamma_E${i}Eta1p7/SingleGamma_E${i}Eta1p7_CMSSW_10_6_3_patch1_upgrade2023_D41_ntuples/`"/0000" >> simpleBH_E${i}Eta1p7.cfg
-cat >> simpleBH_E${i}Eta1p7.cfg << "EOF"
-recoFileName = ntuples
-nRuns = 200
-EOF
-echo "deadfrac = 0.${df}" >> simpleBH_E${i}Eta1p7.cfg
+  namestring=E${En}Eta${eta}
+  configuration=${pGenerator}_E${En}Eta${eta}
+  samplesPath=store/user/${USER}/${configuration}/${configuration}_${cmssw}_${geometry}_ntuples/
+  echo "outFilePath = out_${namestring}.root" > sampleCreator_${namestring}.cfg
+  echo "filePath = ${siteUrl}/${samplesPath}"`ls /eos/uscms/${samplesPath}`"/0000" >> sampleCreator_${namestring}.cfg
+  echo "recoFileName = ntuples" >> sampleCreator_${namestring}.cfg
+  echo "nRuns = ${filesToProcess}" >> sampleCreator_${namestring}.cfg
 done
