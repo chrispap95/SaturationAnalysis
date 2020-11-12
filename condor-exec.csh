@@ -14,7 +14,7 @@ mkdir {lib,bin,obj}
 setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:lib:/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/boost/1.67.0/lib/
 make
 #echo "Arguments passed to this script are: for 1: $1, and for 2: $2"
-./bin/samplesCreator -c scripts/$1
+./bin/sampleCreator -c scripts/$1
 
 # Export file
 set nonomatch
