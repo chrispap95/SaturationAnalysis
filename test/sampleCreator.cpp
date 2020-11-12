@@ -271,7 +271,6 @@ int main(int argc, char** argv){
     float MLdn1, MLdn2, MLdn3, MLdn4, MLdn5, MLdn6;
     float MLun1, MLun2, MLun3, MLun4, MLun5, MLun6;
     float MLrechitsum, MLsimHits, MLthickness;
-    float rechitsum;
     TTree* t1 = new TTree("t1","sample");
     t1->Branch("MLlayer"     ,&MLlayer     ,"MLlayer/F"     );
     t1->Branch("MLwaferU"    ,&MLwaferU    ,"MLwaferU/F"    );
@@ -485,7 +484,6 @@ int main(int argc, char** argv){
             int cellU = (*rechitCellU)[iH];
             int cellV = (*rechitCellV)[iH];
             int thickness = (*rechitThickness)[iH];
-            bool isDense = (thickness == 120) ? 1 : 0;
 
             /* Select hits that are:
             **     - in CE-E
@@ -570,6 +568,7 @@ int main(int argc, char** argv){
                 }
             );
 
+            bool isDense = (std::get<5>(*itr) == 120) ? 1 : 0;
             std::vector<std::tuple<int,int,int,int,int,int>> inLayerNeighbors;
             inLayerNeighbors = getNeighbors(*itr,isDense);
             int iN = 0;
@@ -587,7 +586,6 @@ int main(int argc, char** argv){
                 ++iN;
             }
         }
-
 
         // Second loop over rechits of event
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
