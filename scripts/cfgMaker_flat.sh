@@ -4,18 +4,24 @@
 #     - filesToProcess: number of files to use for each dead fraction.
 #     - splitLevel: maximum number of files per job.
 #                   For no splitting, set it >= ${deadFractions[0]}
-energyRange=0to3000
-eta=1p7
+energyRange=500to3000
+eta=1p62
+phi=0p0
 pGenerator=SingleGamma
 cmssw=${CMSSW_VERSION}
 geometry=upgrade2023_D41
 siteUrl=root://cmseos.fnal.gov/
-filesToProcess=500
-splitLevel=250
+filesToProcess=300
+splitLevel=300
 firstFile=0
 
 # Prepare arrays for job splitting
-configuration=${pGenerator}_E${energyRange}Eta${eta}
+configuration=${pGenerator}_E${energyRange}Eta${eta}Phi${phi}
+if [[ ${phi} == Flat ]];
+then
+  configuration=${pGenerator}_E${energyRange}Eta${eta}
+fi
+
 numberOfJobs=0
 lastJobFiles=0
 if [ $((${filesToProcess}%${splitLevel})) -eq 0 ]
@@ -34,9 +40,17 @@ for j in `seq ${numberOfJobs}`
 do
   if [ ${numberOfJobs} -eq 1 ]
   then
-    namestring=E${energyRange}Eta${eta}
+    namestring=E${energyRange}Eta${eta}Phi${phi}
+    if [[ ${phi} == Flat ]];
+    then
+      namestring=E${energyRange}Eta${eta}
+    fi
   else
-    namestring=E${energyRange}Eta${eta}_${j}
+    namestring=E${energyRange}Eta${eta}Phi${phi}_${j}
+    if [[ ${phi} == Flat ]];
+    then
+      namestring=E${energyRange}Eta${eta}_${j}
+    fi
   fi
   samplesPath=store/user/${USER}/${configuration}/${configuration}_${cmssw}_${geometry}_ntuples/
   echo "outFilePath = out_${namestring}.root" > sampleCreator_${namestring}.cfg

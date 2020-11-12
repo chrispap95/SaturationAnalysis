@@ -5,17 +5,27 @@ source ${PWD}/prepareCondor.sh
 #   - samplesNumber is the number of files to process per dead fraction
 #     to find the proper number you need to weight the samples with the
 #     dead fractions.
-energyRange=0to3000
-eta=1p7
+energyRange=500to3000
+eta=1p62
+phi=0p0
+
 numberOfJobs=2
 
 for j in `seq ${numberOfJobs}`
 do
 if [ ${numberOfJobs} -eq 1 ]
 then
-  namestring=E${energyRange}Eta${eta}
+namestring=E${energyRange}Eta${eta}Phi${phi}
+if [[ ${phi} == Flat ]];
+then
+namestring=E${energyRange}Eta${eta}
+fi
 else
-  namestring=E${energyRange}Eta${eta}_${j}
+namestring=E${energyRange}Eta${eta}Phi${phi}_${j}
+if [[ ${phi} == Flat ]];
+then
+namestring=E${energyRange}Eta${eta}_${j}
+fi
 fi
 argument=sampleCreator_${namestring}.cfg\ out_${namestring}.root\ ${CMSSW_VERSION}\ ${USER}
 
