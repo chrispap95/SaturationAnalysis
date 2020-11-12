@@ -4,7 +4,7 @@ rm ${CMSSW_VERSION}.tgz
 cd ../../../
 echo "Creating tarball..."
 tar --exclude="*.root" --exclude=${CMSSW_BASE}/src/deadCellRegression --exclude-vcs -zcf ${CMSSW_VERSION}.tgz ${CMSSW_VERSION}
-mv ${CMSSW_VERSION}.tgz ${CMSSW_VERSION}/src/ResolutionAnalyzer
+mv ${CMSSW_VERSION}.tgz ${CMSSW_VERSION}/src/SaturationAnalysis
 cd $USERBASE
 if [ ! -f ${CMSSW_VERSION}.tgz ]; then
 echo "Error: tarball doesn't exist!"

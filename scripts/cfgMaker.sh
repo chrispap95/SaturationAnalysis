@@ -2,13 +2,14 @@
 
 # Basic configuration values - self explanatory
 
-eta=1p7
-pGenerator=SingleGamma
+pGenerator=CloseBySingleGamma
 cmssw=${CMSSW_VERSION}
-geometry=upgrade2023_D41
+geometry=upgrade2026_D54
 siteUrl=root://cmseos.fnal.gov/
-energies=(5 10 20 40 60 80 100)
-filesToProcess=200
+eta=1p62
+phi=0p0
+energies=(10 50 100 200 300 400 500 600 700 900 1100 1300 1600 2000 2400 2900)
+filesToProcess=100
 
 # Loop over dead fractions and energies
 # nRuns: number of files to process

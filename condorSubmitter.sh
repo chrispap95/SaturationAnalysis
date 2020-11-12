@@ -1,12 +1,18 @@
 #!/usr/bin/sh
 source ${PWD}/prepareCondor.sh
 
-eta=1p7
-energies=(5 10 20 40 60 80 100)
+eta=1p62
+phi=0p0
+energies=(10 50 100 200 300 400 500 600 700 900 1100 1300 1600 2000 2400 2900)
 
 for En in ${energies[@]}
 do
+if [ phi -eq Flat ];
+then
 namestring=E${En}Eta${eta}
+else
+namestring=E${En}Eta${eta}Phi${phi}
+fi
 argument=sampleCreator_${namestring}.cfg\ out_${namestring}.root\ ${CMSSW_VERSION}\ ${USER}
 
 # Write jdl file

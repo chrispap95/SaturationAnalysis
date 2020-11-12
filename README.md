@@ -2,7 +2,7 @@
 Code that performs simpleBH analysis using CMSSW produced ntuples as input.
 
 ## Introduction
-Works on ```CMSSW_10_6_*```. Setup an environment and clone into ```$CMSSW_BASE/src```.
+Works on ```CMSSW_11_X_Y```. Setup an environment and clone into ```$CMSSW_BASE/src```.
 Then, do
 ```bash
 mkdir {bin,lib,obj}
@@ -28,8 +28,8 @@ I strongly suggest that you setup a fresh CMSSW release in order to make Condor 
 ```bash
 mkdir condorSubmissions
 cd condorSubmissions
-cmsrel CMSSW_10_6_3_patch1
-cd CMSSW_10_6_3_patch1/src
+cmsrel CMSSW_11_2_0_pre8
+cd CMSSW_11_2_0_pre8/src
 cmsenv
 git clone https://github.com/chrispap95/SaturationAnalysis.git
 scram b
@@ -37,10 +37,9 @@ scram b
 Then, prepare your CMSSW to trasfer it to the nodes by issuing
 ```bash
 cd SaturationAnalyzer
-sh prepareCondor.sh
 ```
 
 Then, submit a job
 ```bash
-condor_submit condor.jdl
+sh condorSubmitter.sh
 ```
