@@ -16,7 +16,7 @@ filesToProcess=100
 
 for En in ${energies[@]}
 do
-  if [ phi -eq Flat ];
+  if [ ${phi} -eq Flat ];
   then
     namestring=E${En}Eta${eta}
   else
