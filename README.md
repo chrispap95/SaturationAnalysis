@@ -41,5 +41,6 @@ cd SaturationAnalyzer
 
 Then, submit a job
 ```bash
+mkdir logs
 sh condorSubmitter.sh
 ```

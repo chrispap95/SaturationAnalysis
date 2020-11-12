@@ -7,7 +7,7 @@ energies=(10 50 100 200 300 400 500 600 700 900 1100 1300 1600 2000 2400 2900)
 
 for En in ${energies[@]}
 do
-if [ phi -eq Flat ];
+if [[ ${phi} == Flat ]];
 then
 namestring=E${En}Eta${eta}
 else
@@ -25,9 +25,9 @@ EOF
 echo "Transfer_Input_Files = condor-exec.csh, ${CMSSW_VERSION}.tgz" >> condor_${namestring}.jdl
 echo "Arguments = ${argument}" >> condor_${namestring}.jdl
 cat >> condor_${namestring}.jdl << "EOF"
-Output = sampleCreator_$(Cluster)_$(Process).stdout
-Error = sampleCreator_$(Cluster)_$(Process).stderr
-Log = sampleCreator_$(Cluster)_$(Process).log
+Output = logs/sampleCreator_$(Cluster)_$(Process).stdout
+Error = logs/sampleCreator_$(Cluster)_$(Process).stderr
+Log = logs/sampleCreator_$(Cluster)_$(Process).log
 x509userproxy = $ENV(X509_USER_PROXY)
 Queue 1
 EOF
