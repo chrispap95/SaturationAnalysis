@@ -11,6 +11,7 @@ scramv1 b ProjectRename
 eval `scramv1 runtime -csh` # cmsenv is an alias not on the workers
 cd SaturationAnalysis
 mkdir {lib,bin,obj}
+set LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:`pwd`/lib:/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/boost/1.67.0/lib/
 make
 setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:lib:/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/boost/1.67.0/lib/
 #echo "Arguments passed to this script are: for 1: $1, and for 2: $2"
