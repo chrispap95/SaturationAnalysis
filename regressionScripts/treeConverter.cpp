@@ -11,8 +11,11 @@ void treeConverter(TString input){
     TTree* t = dynamic_cast< TTree* >(f->Get("t1"));
     Float_t n1, n2, n3, n4, n5, n6, nup, ndown, rechit, layer, rechitsum;
     Float_t un1, un2, un3, un4, un5, un6, dn1, dn2, dn3, dn4, dn5, dn6;
-    Float_t saturated, simhits, cellType, event;
+    Float_t saturated, simhits, cellType, event, cellU, cellV;
+
     t->SetBranchAddress(     "MLlayer",     &layer );
+    t->SetBranchAddress(     "MLcellU",     &cellU );
+    t->SetBranchAddress(     "MLcellV",     &cellV );
     t->SetBranchAddress(        "MLn1",        &n1 );
     t->SetBranchAddress(        "MLn2",        &n2 );
     t->SetBranchAddress(        "MLn3",        &n3 );
@@ -77,7 +80,11 @@ void treeConverter(TString input){
         ** sigma 0.013
         */
         //if(!cellType) rechit = 122.24305*simhits; // 300um cells
-        if(!cellType && layer>0 && simhits>0) rechit = 122.092*simhits; // 300um cells
+        //if (cellType!=0 || layer<=0) continue; //only for training
+        //if (cellV==0 || cellV==15 || cellU==0 || cellU==15) continue; //only for training
+        //if (n1>27.7 || n2>27.7 || n3>27.7 || n4>27.7 || n5>27.7 || n6>27.7) continue; //only for training
+        //if (layer!=12) continue;
+        rechit = 122.090*simhits; // 300um cells
         //else rechit = 182.13023*simhits;          // 200um cells
         t1->Fill();
     }

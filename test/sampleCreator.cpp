@@ -47,21 +47,24 @@
 using boost::lexical_cast;
 namespace po=boost::program_options;
 
-double DeltaR(double eta1,double phi1,double eta2,double phi2){
-    double dr=99999.;
-    double deta=fabs(eta1-eta2);
-    double dphi=fabs(phi1-phi2);
+float DeltaR(float eta1,float phi1,float eta2,float phi2){
+    float dr=99999.;
+    float deta=fabs(eta1-eta2);
+    float dphi=fabs(phi1-phi2);
     if(dphi>TMath::Pi()) dphi=2.*TMath::Pi()-dphi;
     dr=sqrt(deta*deta+dphi*dphi);
     return dr;
 }
 
-/* Function that gives a vector of tuples that describe the neighbors
+/* Returns a vector of tuples that describe the neighbors
 ** of the tuple that is given as the input.
+**     - offset: is 0 for low density areas and 4 for high density areas
 */
 std::vector<std::tuple<int, int, int, int, int, int>> getNeighbors(
-    std::tuple<int, int, int, int, int, int> saturatedCell)
+    std::tuple<int, int, int, int, int, int> saturatedCell, bool isDense)
 {
+    int offset = 0;
+    if (isDense) offset = 4;
     std::vector<std::tuple<int, int, int, int, int, int>> neighbors;
     // Find same-layer neighboring cells
     // cell ( 0,-1) wrt given
@@ -87,68 +90,68 @@ std::vector<std::tuple<int, int, int, int, int, int>> getNeighbors(
 
     // Check boundary conditions and make transitions between wafers when on the edge
     // For n1
-    if (std::get<3>(n1) > -1 && std::get<3>(n1) < 8 && std::get<4>(n1) == -1){
+    if (std::get<3>(n1) > -1 && std::get<3>(n1) < (8 + offset) && std::get<4>(n1) == -1){
         std::get<1>(n1) += 1;
-        std::get<3>(n1) += 8;
-        std::get<4>(n1) = 15;
-    }else if (std::get<3>(n1)-std::get<4>(n1) == 9){
+        std::get<3>(n1) += 8 + offset;
+        std::get<4>(n1) = 15 + 2*offset;
+    }else if (std::get<3>(n1)-std::get<4>(n1) == 9 + offset){
         std::get<1>(n1) += 1;
         std::get<2>(n1) += 1;
-        std::get<3>(n1) -= 8;
-        std::get<4>(n1) += 8;
+        std::get<3>(n1) -= 8 + offset;
+        std::get<4>(n1) += 8 + offset;
     }
     // For n2
-    if (std::get<3>(n2) > -1 && std::get<3>(n2) < 8 && std::get<4>(n2) == -1){
+    if (std::get<3>(n2) > -1 && std::get<3>(n2) < (8 + offset) && std::get<4>(n2) == -1){
         std::get<1>(n2) += 1;
-        std::get<3>(n2) += 8;
-        std::get<4>(n2) = 15;
-    }else if (std::get<4>(n2) > -1 && std::get<4>(n2) < 8 && std::get<3>(n2) == -1){
+        std::get<3>(n2) += 8 + offset;
+        std::get<4>(n2) = 15 + 2*offset;
+    }else if (std::get<4>(n2) > -1 && std::get<4>(n2) < (8 + offset) && std::get<3>(n2) == -1){
         std::get<2>(n2) -= 1;
-        std::get<3>(n2) = 15;
-        std::get<4>(n2) += 8;
+        std::get<3>(n2) = 15 + 2*offset;
+        std::get<4>(n2) += 8 + offset;
     }
     // For n3
-    if (std::get<4>(n3) > -1 && std::get<4>(n3) < 8 && std::get<3>(n3) == -1){
+    if (std::get<4>(n3) > -1 && std::get<4>(n3) < (8 + offset) && std::get<3>(n3) == -1){
         std::get<2>(n3) -= 1;
-        std::get<3>(n3) = 15;
-        std::get<4>(n3) += 8;
-    }else if (std::get<4>(n3)-std::get<3>(n3) == 8){
+        std::get<3>(n3) = 15 + 2*offset;
+        std::get<4>(n3) += 8 + offset;
+    }else if (std::get<4>(n3)-std::get<3>(n3) == 8 + offset){
         std::get<1>(n3) -= 1;
         std::get<2>(n3) -= 1;
-        std::get<3>(n3) += 8;
-        std::get<4>(n3) -= 8;
+        std::get<3>(n3) += 8 + offset;
+        std::get<4>(n3) -= 8 + offset;
     }
     // For n4
-    if (std::get<3>(n4) > 7 && std::get<3>(n4) < 16 && std::get<4>(n4) == 16){
+    if (std::get<3>(n4) > (7 + offset) && std::get<3>(n4) < (16 + 2*offset) && std::get<4>(n4) == (16 + 2*offset)){
         std::get<1>(n4) -= 1;
-        std::get<3>(n4) -= 8;
+        std::get<3>(n4) -= 8 + offset;
         std::get<4>(n4) = 0;
-    }else if (std::get<4>(n4)-std::get<3>(n4) == 8){
+    }else if (std::get<4>(n4)-std::get<3>(n4) == (8 + offset)){
         std::get<1>(n4) -= 1;
         std::get<2>(n4) -= 1;
-        std::get<3>(n4) += 8;
-        std::get<4>(n4) -= 8;
+        std::get<3>(n4) += 8 + offset;
+        std::get<4>(n4) -= 8 + offset;
     }
     // For n5
-    if (std::get<4>(n5) > 7 && std::get<4>(n5) < 16 && std::get<3>(n5) == 16){
+    if (std::get<4>(n5) > (7 + offset) && std::get<4>(n5) < (16 + 2*offset) && std::get<3>(n5) == (16 + 2*offset)){
         std::get<2>(n5) += 1;
         std::get<3>(n5) = 0;
-        std::get<4>(n5) -= 8;
-    }else if (std::get<3>(n5) > 7 && std::get<3>(n5) < 16 && std::get<4>(n5) == 16){
+        std::get<4>(n5) -= 8 + offset;
+    }else if (std::get<3>(n5) > (7 + offset) && std::get<3>(n5) < (16 + 2*offset) && std::get<4>(n5) == (16 + 2*offset)){
         std::get<1>(n5) -= 1;
-        std::get<3>(n5) -= 8;
+        std::get<3>(n5) -= 8 + offset;
         std::get<4>(n5) = 0;
     }
     // For n6
-    if (std::get<4>(n6) > 7 && std::get<4>(n6) < 16 && std::get<3>(n6) == 16){
+    if (std::get<4>(n6) > (7 + offset) && std::get<4>(n6) < (16 + 2*offset) && std::get<3>(n6) == (16 + 2*offset)){
         std::get<2>(n6) += 1;
         std::get<3>(n6) = 0;
-        std::get<4>(n6) -= 8;
-    }else if (std::get<3>(n6)-std::get<4>(n6) == 9){
+        std::get<4>(n6) -= 8 + offset;
+    }else if (std::get<3>(n6)-std::get<4>(n6) == (9 + offset)){
         std::get<1>(n6) += 1;
         std::get<2>(n6) += 1;
-        std::get<3>(n6) -= 8;
-        std::get<4>(n6) += 8;
+        std::get<3>(n6) -= 8 + offset;
+        std::get<4>(n6) += 8 + offset;
     }
 
     neighbors.push_back(n1);
@@ -267,7 +270,7 @@ int main(int argc, char** argv){
     float MLn1, MLn2, MLn3, MLn4, MLn5, MLn6;
     float MLdn1, MLdn2, MLdn3, MLdn4, MLdn5, MLdn6;
     float MLun1, MLun2, MLun3, MLun4, MLun5, MLun6;
-    float MLrechitsum, MLsimHits, cellType;
+    float MLrechitsum, MLsimHits, MLthickness;
     float rechitsum;
     TTree* t1 = new TTree("t1","sample");
     t1->Branch("MLlayer"     ,&MLlayer     ,"MLlayer/F"     );
@@ -301,10 +304,7 @@ int main(int argc, char** argv){
     t1->Branch("MLevent"     ,&MLevent     ,"MLevent/F"     );
     t1->Branch("MLrechitsum" ,&MLrechitsum ,"MLrechitsum/F" );
     t1->Branch("MLsimHits"   ,&MLsimHits   ,"MLsimHits/F"   );
-    t1->Branch("cellType"    ,&cellType    ,"cellType/F"    );
-    t1->Branch("rechitsum_full" ,&rechitsum ,"rechitsum_full/F" );
-
-    TH1F* h1 = new TH1F("h1","rechitsum",300,0,3000);
+    t1->Branch("MLthickness" ,&MLthickness ,"MLthickness/F" );
 
     /**********************************
     **  start event loop
@@ -318,30 +318,31 @@ int main(int argc, char** argv){
     << lRecTree->GetEntries() << std::endl;
 
     //loop on events
-    std::vector<float   > *rechitEnergy = 0;
-    std::vector<float   > *rechitEta    = 0;
-    std::vector<float   > *rechitPhi    = 0;
-    std::vector<float   > *rechitPosx   = 0;
-    std::vector<float   > *rechitPosy   = 0;
-    std::vector<float   > *rechitPosz   = 0;
-    std::vector<unsigned> *rechitLayer  = 0;
-    std::vector<int     > *rechitWaferU = 0;
-    std::vector<int     > *rechitWaferV = 0;
-    std::vector<unsigned> *rechitCellU  = 0;
-    std::vector<unsigned> *rechitCellV  = 0;
-    std::vector<float   > *simhitEnergy = 0;
-    std::vector<float   > *simhitEta    = 0;
-    std::vector<float   > *simhitPhi    = 0;
-    std::vector<float   > *simhitPosx   = 0;
-    std::vector<float   > *simhitPosy   = 0;
-    std::vector<float   > *simhitPosz   = 0;
-    std::vector<unsigned> *simhitLayer  = 0;
-    std::vector<int     > *simhitWaferU = 0;
-    std::vector<int     > *simhitWaferV = 0;
-    std::vector<unsigned> *simhitCellU  = 0;
-    std::vector<unsigned> *simhitCellV  = 0;
-    std::vector<float   > *genEta       = 0;
-    std::vector<float   > *genPhi       = 0;
+    std::vector<float> *rechitEnergy = 0;
+    std::vector<float> *rechitEta = 0;
+    std::vector<float> *rechitPhi = 0;
+    std::vector<float> *rechitPosx = 0;
+    std::vector<float> *rechitPosy = 0;
+    std::vector<float> *rechitPosz = 0;
+    std::vector<unsigned> *rechitLayer = 0;
+    std::vector<int> *rechitWaferU = 0;
+    std::vector<int> *rechitWaferV = 0;
+    std::vector<unsigned> *rechitCellU = 0;
+    std::vector<unsigned> *rechitCellV = 0;
+    std::vector<unsigned> *rechitThickness = 0;
+    std::vector<float> *simhitEnergy = 0;
+    std::vector<float> *simhitEta = 0;
+    std::vector<float> *simhitPhi = 0;
+    std::vector<float> *simhitPosx = 0;
+    std::vector<float> *simhitPosy = 0;
+    std::vector<float> *simhitPosz = 0;
+    std::vector<unsigned> *simhitLayer = 0;
+    std::vector<int> *simhitWaferU = 0;
+    std::vector<int> *simhitWaferV = 0;
+    std::vector<unsigned> *simhitCellU = 0;
+    std::vector<unsigned> *simhitCellV = 0;
+    std::vector<float> *genEta = 0;
+    std::vector<float> *genPhi = 0;
     ULong64_t event = 0;
 
     lRecTree->SetBranchAddress( "rechit_energy", &rechitEnergy );
@@ -355,6 +356,7 @@ int main(int argc, char** argv){
     lRecTree->SetBranchAddress( "rechit_wafer_v", &rechitWaferV );
     lRecTree->SetBranchAddress( "rechit_cell_u", &rechitCellU );
     lRecTree->SetBranchAddress( "rechit_cell_v", &rechitCellV );
+    lRecTree->SetBranchAddress( "rechit_thickness", &rechitThickness );
     lRecTree->SetBranchAddress( "simhit_energy", &simhitEnergy );
     lRecTree->SetBranchAddress( "simhit_eta", &simhitEta );
     lRecTree->SetBranchAddress( "simhit_phi", &simhitPhi );
@@ -387,12 +389,11 @@ int main(int argc, char** argv){
         **      MLevent,
         **      MLrechitsum,
         **      MLsimHits,
-        **      cellType
+        **      MLthickness
         ** }
         */
         // Format:
-        // <layer, waferU, waferV, cellU, cellV, cellType>
-        // cellType is 0 for 300um and 1 for 200um
+        // <layer, waferU, waferV, cellU, cellV, thickness>
         std::set<std::tuple<int, int, int, int, int, int>> saturatedList;
 
         // Define average energy in layers plus and minus 1
@@ -401,7 +402,8 @@ int main(int argc, char** argv){
 
         std::vector<std::array<float, 32>> MLvectorev;
 
-        bool isSaturated = 0;
+        // Breaks the second loop if there are no saturated cells in the event
+        bool hasSaturated = 0;
 
         if (ievtRec>=lRecTree->GetEntries()) continue;
         Long64_t local_entry = lRecTree->LoadTree(ievt);
@@ -422,6 +424,7 @@ int main(int argc, char** argv){
             lRecTree->SetBranchAddress( "rechit_wafer_v", &rechitWaferV );
             lRecTree->SetBranchAddress( "rechit_cell_u", &rechitCellU );
             lRecTree->SetBranchAddress( "rechit_cell_v", &rechitCellV );
+            lRecTree->SetBranchAddress( "rechit_thickness", &rechitThickness );
             lRecTree->SetBranchAddress( "simhit_energy", &simhitEnergy );
             lRecTree->SetBranchAddress( "simhit_eta", &simhitEta );
             lRecTree->SetBranchAddress( "simhit_phi", &simhitPhi );
@@ -440,8 +443,8 @@ int main(int argc, char** argv){
 
         lRecTree->GetEntry(ievtRec);
 
-        double etagen   = 99999.;
-        double phigen   = 99999.;
+        float etagen   = 99999.;
+        float phigen   = 99999.;
         if((*genEta).size()>0) {
             etagen   = (*genEta)[0];
             phigen   = (*genPhi)[0];
@@ -449,8 +452,7 @@ int main(int argc, char** argv){
 
         if (debug) std::cout << " - Event contains " << (*rechitEnergy).size()
         << " rechits." << std::endl;
-        double coneSize = 0.3;
-        rechitsum = 0;
+        float coneSize = 0.15;
         MLrechitsum = 0;
 
         // Buffer array that passes rechitsum to the output even when
@@ -465,23 +467,25 @@ int main(int argc, char** argv){
             0, 0, 0, 0, 0, 0, // dn1, dn2, dn3, dn4, dn5, dn6
             (float)ievt,
             0, 0,             // recHitsum, simhits
-            -1                 // cellType
+            -1                 // thickness
         };
         MLvectorev.push_back(bufferArr);
 
         // First loop over rechits of event
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
-            int     layer   = (*rechitLayer)[iH];
-            float   zh      = (*rechitPosz)[iH];
-            float   lenergy = (*rechitEnergy)[iH];
-            float   leta    = (*rechitEta)[iH];
-            float   lphi    = (*rechitPhi)[iH];
-            float   dR      = DeltaR(etagen,phigen,leta,lphi);
+            int layer = (*rechitLayer)[iH];
+            float zh = (*rechitPosz)[iH];
+            float lenergy = (*rechitEnergy)[iH];
+            float leta = (*rechitEta)[iH];
+            float lphi = (*rechitPhi)[iH];
+            float dR = DeltaR(etagen,phigen,leta,lphi);
 
-            int waferU  = (*rechitWaferU)[iH];
-            int waferV  = (*rechitWaferV)[iH];
-            int cellU   = (*rechitCellU)[iH];
-            int cellV   = (*rechitCellV)[iH];
+            int waferU = (*rechitWaferU)[iH];
+            int waferV = (*rechitWaferV)[iH];
+            int cellU = (*rechitCellU)[iH];
+            int cellV = (*rechitCellV)[iH];
+            int thickness = (*rechitThickness)[iH];
+            bool isDense = (thickness == 120) ? 1 : 0;
 
             /* Select hits that are:
             **     - in CE-E
@@ -489,16 +493,15 @@ int main(int argc, char** argv){
             **     - in positive endcap
             */
             if(zh > 0 && dR < coneSize) {
-                rechitsum += lenergy;
-                if(layer == 15 && lenergy>27.7 && lenergy<27.85){
-                    // Format: (layer, waferU, waferV, cellU, cellV, cellType)
+                if(lenergy>27.7 && lenergy<27.85){
+                    // Format: (layer, waferU, waferV, cellU, cellV, thickness)
                     std::tuple<int, int, int, int, int, int> saturatedCell;
                     std::get<0>(saturatedCell) = layer;
                     std::get<1>(saturatedCell) = waferU;
                     std::get<2>(saturatedCell) = waferV;
                     std::get<3>(saturatedCell) = cellU;
                     std::get<4>(saturatedCell) = cellV;
-                    std::get<5>(saturatedCell) = 0;
+                    std::get<5>(saturatedCell) = thickness;
                     saturatedList.insert(saturatedCell);
                     std::array<float, 32> tempArr = {
                         (float)layer, (float)waferU, (float)waferV,
@@ -510,19 +513,19 @@ int main(int argc, char** argv){
                         0, 0, 0, 0, 0, 0, // dn1, dn2, dn3, dn4, dn5, dn6
                         (float)ievt,
                         0, 0,             // recHitsum, simhits
-                        0                 // cellType
+                        (float)thickness
                     };
                     MLvectorev.push_back(tempArr);
-                    isSaturated = 1;
-                }else if(layer==15 && lenergy>41.3 && lenergy<41.45){
-                    // Format: (layer, waferU, waferV, cellU, cellV, cellType)
+                    hasSaturated = 1;
+                }else if(lenergy>41.3 && lenergy<41.45){
+                    // Format: (layer, waferU, waferV, cellU, cellV, thickness)
                     std::tuple<int, int, int, int, int, int> saturatedCell;
                     std::get<0>(saturatedCell) = layer;
                     std::get<1>(saturatedCell) = waferU;
                     std::get<2>(saturatedCell) = waferV;
                     std::get<3>(saturatedCell) = cellU;
                     std::get<4>(saturatedCell) = cellV;
-                    std::get<5>(saturatedCell) = 1;
+                    std::get<5>(saturatedCell) = thickness;
                     saturatedList.insert(saturatedCell);
                     std::array<float, 32> tempArr = {
                         (float)layer, (float)waferU, (float)waferV,
@@ -534,10 +537,10 @@ int main(int argc, char** argv){
                         0, 0, 0, 0, 0, 0, // dn1, dn2, dn3, dn4, dn5, dn6
                         (float)ievt,
                         0, 0,             // recHitsum, simhits
-                        1                 // cellType
+                        (float)thickness
                     };
                     MLvectorev.push_back(tempArr);
-                    isSaturated = 1;
+                    hasSaturated = 1;
                 }else{
                     MLrechitsum += lenergy;
                 }
@@ -568,7 +571,7 @@ int main(int argc, char** argv){
             );
 
             std::vector<std::tuple<int,int,int,int,int,int>> inLayerNeighbors;
-            inLayerNeighbors = getNeighbors(*itr);
+            inLayerNeighbors = getNeighbors(*itr,isDense);
             int iN = 0;
             for(auto itr2 = inLayerNeighbors.begin(); itr2!=inLayerNeighbors.end(); ++itr2){
                 adj_to_saturated_inlay.insert(
@@ -588,25 +591,27 @@ int main(int argc, char** argv){
 
         // Second loop over rechits of event
         for (unsigned iH(0); iH<(*rechitEnergy).size(); ++iH){
-            if (!isSaturated) break;
-            int      layer   = (*rechitLayer)[iH];
-            double   zh      = (*rechitPosz)[iH];
-            double   lenergy = (*rechitEnergy)[iH];
-            double   leta    = (*rechitEta)[iH];
-            double   lphi    = (*rechitPhi)[iH];
-            double   dR      = DeltaR(etagen,phigen,leta,lphi);
+            if (!hasSaturated) break;
+            int layer = (*rechitLayer)[iH];
+            float zh = (*rechitPosz)[iH];
+            float lenergy = (*rechitEnergy)[iH];
+            float leta = (*rechitEta)[iH];
+            float lphi = (*rechitPhi)[iH];
+            float dR = DeltaR(etagen,phigen,leta,lphi);
 
-            int waferU  = (*rechitWaferU)[iH];
-            int waferV  = (*rechitWaferV)[iH];
-            int cellU   = (*rechitCellU)[iH];
-            int cellV   = (*rechitCellV)[iH];
+            int waferU = (*rechitWaferU)[iH];
+            int waferV = (*rechitWaferV)[iH];
+            int cellU = (*rechitCellU)[iH];
+            int cellV = (*rechitCellV)[iH];
+            int thickness = (*rechitThickness)[iH];
+            bool isDense = (thickness == 120) ? 1 : 0;
 
             /* Select hits that are:
             **     - in CE-E
             **     - within DeltaR < 0.3 wrt gen particle
             **     - in positive endcap
             */
-            if((layer==14 || layer==15 || layer==16) && zh > 0 && dR < coneSize) {
+            if(zh > 0 && dR < coneSize) {
                std::tuple<int, int, int, int, int, int> tempsi1(layer,waferU,waferV,cellU,cellV,0);
                 std::tuple<int, int, int, int, int, int> tempsi2(layer,waferU,waferV,cellU,cellV,1);
 
@@ -653,7 +658,7 @@ int main(int argc, char** argv){
                     std::set<std::tuple<int, int, int, int, int, int>>::iterator itrNn=adj_to_saturated_inlay.find(tempsiNn);
                     if(itrNn!=adj_to_saturated_inlay.end()) {
                         std::vector<std::tuple<int,int,int,int,int, int>> sameLayerNeighbors;
-                        sameLayerNeighbors = getNeighbors(tempsi1);
+                        sameLayerNeighbors = getNeighbors(tempsi1,isDense);
                         // Get neighbor number
                         int nn = (std::get<0>(*itrNn)+3)%6;
                         std::tuple<int, int, int, int> saturatedCell;
@@ -678,7 +683,7 @@ int main(int argc, char** argv){
                     std::set<std::tuple<int, int, int, int, int, int>>::iterator itrUNn=adj_to_saturated_inlay.find(tempsiUNn);
                     if(itrUNn!=adj_to_saturated_inlay.end()) {
                         std::vector<std::tuple<int,int,int,int,int, int>> nextLayerNeighbors;
-                        nextLayerNeighbors = getNeighbors(tempsi1);
+                        nextLayerNeighbors = getNeighbors(tempsi1,isDense);
                         // Get neighbor number
                         int nn = (std::get<0>(*itrUNn)+3)%6;
                         std::tuple<int, int, int, int> saturatedCell;
@@ -703,7 +708,7 @@ int main(int argc, char** argv){
                     std::set<std::tuple<int, int, int, int, int, int>>::iterator itrDNn=adj_to_saturated_inlay.find(tempsiDNn);
                     if(itrDNn!=adj_to_saturated_inlay.end()) {
                         std::vector<std::tuple<int,int,int,int,int, int>> prevLayerNeighbors;
-                        prevLayerNeighbors = getNeighbors(tempsi1);
+                        prevLayerNeighbors = getNeighbors(tempsi1,isDense);
                         // Get neighbor number
                         int nn = (std::get<0>(*itrDNn)+3)%6;
                         std::tuple<int, int, int, int> saturatedCell;
@@ -723,17 +728,16 @@ int main(int argc, char** argv){
                 }
             }
         }
-        h1->Fill(rechitsum);
 
         // Loop over simhits of event
         for (unsigned iH(0); iH<(*simhitEnergy).size(); ++iH){
-            if (!isSaturated) break;
-            int   layer   = (*simhitLayer)[iH];
-            float zh      = (*simhitPosz)[iH];
+            if (!hasSaturated) break;
+            int layer = (*simhitLayer)[iH];
+            float zh = (*simhitPosz)[iH];
             float lenergy = (*simhitEnergy)[iH];
-            float leta    = (*simhitEta)[iH];
-            float lphi    = (*simhitPhi)[iH];
-            float dR      = DeltaR(etagen,phigen,leta,lphi);
+            float leta = (*simhitEta)[iH];
+            float lphi = (*simhitPhi)[iH];
+            float dR = DeltaR(etagen,phigen,leta,lphi);
 
             int waferU = (*simhitWaferU)[iH];
             int waferV = (*simhitWaferV)[iH];
@@ -742,10 +746,10 @@ int main(int argc, char** argv){
 
             /* Select hits that are:
             **     - in CE-E
-            **     - within DeltaR < 0.3 wrt gen particle
+            **     - within DeltaR < 0.15 wrt gen particle
             **     - in positive endcap
             */
-            if(layer==15 && zh > 0 && dR < coneSize) {
+            if(zh > 0 && dR < coneSize) {
                 for(auto itr = MLvectorev.begin(); itr != MLvectorev.end(); ++itr) {
                     if(
                         (*itr)[0] == layer  && (*itr)[1] == waferU &&
@@ -793,9 +797,8 @@ int main(int argc, char** argv){
                 MLdn5       = (*itr)[26];
                 MLdn6       = (*itr)[27];
                 MLevent     = (float)ievt;
-                //MLrechitsum = rechitsumsaturated_Si;
                 MLsimHits   = (*itr)[30];
-                cellType    = (*itr)[31];
+                MLthickness = (*itr)[31];
                 t1->Fill();
             }
         }

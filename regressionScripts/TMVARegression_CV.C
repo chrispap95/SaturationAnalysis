@@ -22,7 +22,7 @@ void TMVARegression()
 {
   TMVA::Tools::Instance();
 
-  TString uniqueid = "TMVAReg_saturated_E500to3000Eta1p56Phi0p0_crossvalidation";
+  TString uniqueid = "TMVAReg_saturated_E500to3000Eta1p56Phi0p0_CV_240K_3hl_25nodes";
 
   std::cout << std::endl;
   std::cout << "==> Start TMVARegression" << std::endl;
@@ -59,7 +59,7 @@ void TMVARegression()
 
   //load the signal and background event samples from ROOT trees
   TFile *input(0);
-  TString fname = "TrainingSamples/out_E500to3000Eta1p56Phi0_0_converted.root";
+  TString fname = "TrainingSamples.nosync/out_E500to3000Eta1p56Phi0_0_converted.root";
   if (!gSystem->AccessPathName( fname )) {
     input = TFile::Open( fname ); // check if file in local directory exists
   }
@@ -74,9 +74,9 @@ void TMVARegression()
 
   Double_t regWeight  = 1.0;
   dataloader->AddRegressionTree( regTree, regWeight );
-  TCut mycut = "layer>0";
+  TCut mycut = "";
   dataloader->PrepareTrainingAndTestTree(mycut,
-    "nTrain_Regression=0:nTest_Regression=0:"
+    "nTest_Regression=0:"
     "SplitMode=Random:NormMode=NumEvents:!V");
 
   UInt_t numFolds = 5;
@@ -90,12 +90,12 @@ void TMVARegression()
   TMVA::CrossValidation ce{"TMVACrossValidationRegression", dataloader, outputFile, cvOptions};
 
 
-  TString layoutString("Layout=SYMMRELU|22,Layout=SYMMRELU|25,Layout=SYMMRELU|25,Layout=SYMMRELU|25,"
+  TString layoutString("Layout=SYMMRELU|7,Layout=SYMMRELU|10,Layout=SYMMRELU|10,Layout=SYMMRELU|10,"
                        "LINEAR");
-  TString training0("LearningRate=1e-3,Momentum=0.5,Repetitions=1,ConvergenceSteps=20,BatchSize=200,"
+  TString training0("LearningRate=5e-4,Momentum=0.5,Repetitions=1,ConvergenceSteps=20,BatchSize=200,"
                     "TestRepetitions=10,WeightDecay=0.01,Regularization=NONE,DropConfig=0.2+0.2+0.2+0.,"
                     "DropRepetitions=2");
-  TString training1("LearningRate=1e-3,Momentum=0.7,Repetitions=1,ConvergenceSteps=20,BatchSize=200,"
+  TString training1("LearningRate=5e-4,Momentum=0.7,Repetitions=1,ConvergenceSteps=20,BatchSize=200,"
                     "TestRepetitions=5,WeightDecay=0.01,Regularization=L2,DropConfig=0.1+0.1+0.1,"
                     "DropRepetitions=1");
   TString training2("LearningRate=1e-4,Momentum=0.3,Repetitions=1,ConvergenceSteps=20,BatchSize=200,"

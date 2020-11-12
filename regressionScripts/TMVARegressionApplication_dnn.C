@@ -70,7 +70,7 @@ void TMVARegressionApplication_dnn(int energy) {
     reader->AddVariable(      "dn4",      &dn4);
     reader->AddVariable(      "dn5",      &dn5);
     reader->AddVariable(      "dn6",      &dn6);
-    reader->AddVariable( "cellType", &cellType);
+    //reader->AddVariable( "cellType", &cellType);
 
     // Spectator variables declared in the training have to be added to the reader, too
     //Float_t spec1,spec2;
@@ -80,7 +80,7 @@ void TMVARegressionApplication_dnn(int energy) {
     // --- Book the MVA methods
 
     TString dir    = "dataset/weights/";
-    TString prefix = "TMVAReg_saturated_E0to3000_40nodes_3hls";
+    TString prefix = "TMVAReg_saturated_E500to3000Eta1p56Phi0p0_240K_3hl_25nodes";
 
     // Book method(s)
     TString methodName = "DNN_CPU method";//it->first + " method";
@@ -93,7 +93,7 @@ void TMVARegressionApplication_dnn(int energy) {
     //
     string energy_str = to_string(energy);
     TFile *input(0);
-    TString fname = "EvaluationSamples2/out_E"+energy_str+"Eta1p7_0_converted.root";
+    TString fname = "EvaluationSamples2/out_E"+energy_str+"Eta1p56Phi0p0_0_converted.root";
     if (!gSystem->AccessPathName( fname )) {
         input = TFile::Open( fname ); // check if file in local directory exists
     }
@@ -142,7 +142,7 @@ void TMVARegressionApplication_dnn(int energy) {
     theTree->SetBranchAddress( "rechitsum", &rechitsum );
     theTree->SetBranchAddress(    "rechit",    &rechit ); // Unsaturated rechit estimation
 
-    TString foutname = "RegressionResults2/flatRegressionResult_"+energy_str+"GeV.root";
+    TString foutname = "RegressionResults2/flatRegressionResult_"+energy_str+"GeV_Eta1p56Phi0p0.root";
     TFile *target  = new TFile( foutname,"RECREATE" );
     TTree* t1 = new TTree("t1","sample");
     Float_t val;

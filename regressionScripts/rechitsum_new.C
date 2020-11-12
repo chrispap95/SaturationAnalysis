@@ -1,5 +1,6 @@
-std::vector<double> rechitsum_new(int En, int bins, int range, double fit_cut){
-    TString filename = "RegressionResults2/flatRegressionResult_"+to_string(En)+"GeV.root";
+std::vector<double> rechitsum_new(
+  int En, int bins, int range, double fit_cut_low, double fit_cut_up = 3.0){
+    TString filename = "RegressionResults2/flatRegressionResult_"+to_string(En)+"GeV_Eta1p56Phi0p0.root";
     TFile* fin = TFile::Open(filename);
     TTree* t1 = dynamic_cast< TTree* >(fin->Get("t1"));
     Float_t rechitsum, truth, regression, event, nup, ndown, cellType, layer;
@@ -37,7 +38,7 @@ std::vector<double> rechitsum_new(int En, int bins, int range, double fit_cut){
     TString histname = "single gamma "+to_string(En)+"GeV;recHitSum [GeV];Entries";
     TH1F* h1;
     if (En<1000) h1 = new TH1F("h1",histname,bins,En-range,En+range);
-    else h1 = new TH1F("h1",histname,bins,En-range,En+range);
+    else h1 = new TH1F("h1",histname,bins,En-3*range,En+range);
     int n = t1->GetEntries();
     Float_t event_tmp;
     Float_t rechitsum_nocorr = 0;
@@ -71,7 +72,8 @@ std::vector<double> rechitsum_new(int En, int bins, int range, double fit_cut){
 
     h1->Draw();
     TFitResultPtr r = h1->Fit("gaus","Sq","");
-    r = h1->Fit("gaus","S","",r->Parameter(1)-fit_cut*r->Parameter(2),r->Parameter(1)+3*r->Parameter(2));
+    if (En > 700) fit_cut_up = 1.5;
+    r = h1->Fit("gaus","S","",r->Parameter(1)-fit_cut_low*r->Parameter(2),r->Parameter(1)+fit_cut_up*r->Parameter(2));
 
     std::vector<double> output_vector;
     double a0  = r->Parameter(0);

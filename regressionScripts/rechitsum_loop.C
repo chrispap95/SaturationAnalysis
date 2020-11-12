@@ -8,13 +8,25 @@ void rechitsum_loop(){
     TCanvas* c2 = new TCanvas("c2","c2",1000,800);
     TCanvas* c3 = new TCanvas("c3","c3",1000,800);
     TCanvas* c4 = new TCanvas("c4","c4",1000,800);
-    TCanvas* c5 = new TCanvas("c5","c5",1000,800);
+    //TCanvas* c5 = new TCanvas("c5","c5",1000,800);
     c1->Divide(2,2);
     c2->Divide(2,2);
     c3->Divide(2,2);
     c4->Divide(2,2);
-    c5->Divide(2,2);
+    //c5->Divide(2,2);
 
+    double energies[]   = { 10, 50,100,200,300,500,600,700,900,1200,1600,2000,2900};
+    int bins[]          = {100,100,100,100,100,100,100,100,100, 100, 100, 100, 100};
+    int range[]         = {  5, 10, 15, 25, 30, 40, 50,100,150, 200, 200, 300, 500};
+    double fit_cut[]    = {1.6,1.6,1.6,1.6,1.6,1.5,1.5,1.5,1.5, 1.5, 1.8, 1.8, 1.8};
+
+    double scemean[]   = {0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.};
+    double scemeane[]  = {0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.};
+    double sceres[]    = {0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.};
+    double scerese[]   = {0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.};
+    double energiese[] = {0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.};
+
+    /*
     double energies[]   = {  5, 10, 15, 20, 30, 40, 60, 80,100,140,200,280,400,550,750,1000,1400,2000,2800};
     int bins[]          = {100,100,100,100,100,100,100,100,100,100,100,100,100,100,100, 100, 100, 100, 100};
     int range[]         = {  3,  5,  5, 10, 10, 10, 15, 15, 15, 20, 25, 30, 40, 50,100, 150, 200, 300, 400};
@@ -25,7 +37,7 @@ void rechitsum_loop(){
     double sceres[]    = {0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.};
     double scerese[]   = {0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.};
     double energiese[] = {0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.};
-
+    */
     /*
     double energies[]  = {750,1000,1400,2000,2800};
     int bins[]         = {100, 100, 100, 100, 200};
@@ -44,12 +56,12 @@ void rechitsum_loop(){
     double energiese[] = {0.,0.,0.,0.,0.};
     */
 
-    for(int j = 0; j < 19; ++j){
+    for(int j = 0; j < 13; ++j){
         if(j < 4) c1->cd(j%4+1);
         else if(j < 8) c2->cd(j%4+1);
         else if(j < 12) c3->cd(j%4+1);
         else if(j < 16) c4->cd(j%4+1);
-        else c5->cd(j%4+1);
+        //else c5->cd(j%4+1);
         std::vector<double> temp = rechitsum_new(energies[j],bins[j],range[j],fit_cut[j]);
         scemean[j]  = temp[1];
         scemeane[j] = temp[4];
@@ -62,16 +74,16 @@ void rechitsum_loop(){
     }
 
     TCanvas* c_res = new TCanvas("c_res","c_res",1);
-    TGraphErrors *gr = new TGraphErrors(19,energies,sceres,energiese,scerese);
+    TGraphErrors *gr = new TGraphErrors(13,energies,sceres,energiese,scerese);
     gr->SetTitle("gamma resolution versus energy;E [GeV];width/mean");
     gr->SetMarkerColor(4);
     gr->SetMarkerStyle(21);
     TF1  *f2 = new TF1("f2","sqrt(([0]/sqrt(x))**2+([1]/x)**2+([2])**2)");
     f2->SetNpx(1000);
-    //gr->Fit("f2");
+    gr->Fit("f2");
     gr->Draw("AP");
 
-    TString outname = "outputFiles/out_mlCorr.root";
+    TString outname = "outputFiles/out_mlCorr_Eta1p56Phi0p0.root";
     TFile* out = new TFile(outname,"RECREATE");
     gr->Write();
     out->Close();
