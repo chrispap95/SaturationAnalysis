@@ -16,8 +16,13 @@ filesToProcess=100
 
 for En in ${energies[@]}
 do
-  namestring=E${En}Eta${eta}
-  configuration=${pGenerator}_E${En}Eta${eta}
+  if [ phi -eq Flat ];
+  then
+    namestring=E${En}Eta${eta}
+  else
+    namestring=E${En}Eta${eta}Phi${phi}
+  fi
+  configuration=${pGenerator}_${namestring}
   samplesPath=store/user/${USER}/${configuration}/${configuration}_${cmssw}_${geometry}_ntuples/
   echo "outFilePath = out_${namestring}.root" > sampleCreator_${namestring}.cfg
   echo "filePath = ${siteUrl}/${samplesPath}"`ls /eos/uscms/${samplesPath}`"/0000" >> sampleCreator_${namestring}.cfg
