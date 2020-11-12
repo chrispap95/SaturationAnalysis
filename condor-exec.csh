@@ -18,7 +18,7 @@ make
 
 # Export file
 set nonomatch
-if ( $1 =~ *"to"* ) then
+if ( $1 == *"to"* ) then
 xrdcp -f $2 root://cmseos.fnal.gov//store/user/${4}/SaturatedCellsSamples/TrainingSamples/$2
 else
 xrdcp -f $2 root://cmseos.fnal.gov//store/user/${4}/SaturatedCellsSamples/EvaluationSamples/$2
